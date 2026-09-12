@@ -26,7 +26,7 @@ const team = [
   name: "Famezilla",
   username: "fame_max",
   role: "Team Member",
-  image: "/images/Famexage.jpg",
+  image: "/images/Famemaxe.jpg",
 },
   {
   name: "Novacore",
