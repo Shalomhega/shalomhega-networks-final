@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-ink font-body antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading text-ink;
+  }
+
+  ::selection {
+    @apply bg-purple/30 text-ink;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-cyan;
+  }
+}
+
+@layer utilities {
+  /* Subtle multi color glow used as a page or section backdrop.
+     Kept low opacity so it never competes with text contrast. */
+  .bg-brand-field {
+    @apply bg-background bg-brand-glow;
+  }
+}
