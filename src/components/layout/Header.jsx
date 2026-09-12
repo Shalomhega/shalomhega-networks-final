@@ -37,7 +37,11 @@ function Header() {
           onClick={closeMenu}
           className="font-heading text-base font-semibold tracking-tight text-ink"
         >
-          SHALOMHEGA NETWORKS
+          <img
+  src="/images/NETWORKIMAGE.png"
+  alt="SHALOMHEGA NETWORKS"
+  className="h-10 w-auto"
+/>
         </Link>
 
         <nav className="hidden xl:flex xl:items-center xl:gap-6">
