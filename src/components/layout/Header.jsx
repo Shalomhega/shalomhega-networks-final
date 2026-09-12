@@ -40,7 +40,7 @@ function Header() {
           <img
   src="/images/NETWORKIMAGE.png"
   alt="SHALOMHEGA NETWORKS"
-  className="h-10 w-auto"
+  className="h-12 w-auto"
 />
         </Link>
 
