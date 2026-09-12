@@ -4,42 +4,48 @@ import { Link } from "react-router-dom";
 
 const leadership = [
   {
-    name: "SHALOM",
-    role: "Founder & Community Development Lead",
-    username: "shalom_x2",
-    description:
-      "Leading the vision, structure, development, and growth of SHALOMHEGA NETWORKS."
-  },
+  name: "SHALOM",
+  role: "Founder & Community Development Lead",
+  username: "shalom_x2",
+  image: "/images/Shalomnetwork.png",
+  description:
+    "Leading the vision, structure, development, and growth of SHALOMHEGA NETWORKS."
+},
   {
-    name: "OMHEGA",
-    role: "Co-Founder & Community Systems Lead",
-    username: "omhega_x3",
-    description:
-      "Helping build strong systems, infrastructure, and practical foundations for the community."
-  }
+  name: "OMHEGA",
+  role: "Co-Founder & Community Systems Lead",
+  username: "omhega_x3",
+  image: "/images/OMHEGA.jpg",
+  description:
+    "Helping build strong systems, infrastructure, and practical foundations for the community."
+},
 ];
 
 const team = [
   {
-    name: "Famezilla",
-    username: "fame_max",
-    role: "Team Member"
-  },
+  name: "Famezilla",
+  username: "fame_max",
+  role: "Team Member",
+  image: "/images/Famexage.jpg",
+},
   {
-    name: "Novacore",
-    username: "Novacore",
-    role: "Team Member"
-  },
+  name: "Novacore",
+  username: "Novacore",
+  role: "Team Member",
+  image: "/images/Novacore.png",
+},
   {
-    name: "MONET",
-    username: "Monet40",
-    role: "Team Member"
-  },
+  name: "MONET",
+  username: "Monet40",
+  role: "Team Member",
+  image: "/images/monet.png",
+},
   {
-    name: "Qosight",
-    username: "Qosight",
-    role: "Team Member"
-  }
+  name: "Qosight",
+  username: "Qosight",
+  role: "Team Member",
+  image: "/images/qosiht.png",
+},
 ];
 
 function OurTeam() {
@@ -85,9 +91,11 @@ function OurTeam() {
                 key={member.name}
                 className="rounded-3xl border border-purple/40 bg-surface p-8"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple/20 text-2xl font-bold text-purple">
-                  {member.name.charAt(0)}
-                </div>
+                <img
+  src={member.image}
+  alt={member.name}
+  className="h-16 w-16 rounded-2xl object-cover border border-purple/40"
+/>
 
                 <p className="mt-6 text-sm font-semibold tracking-[.15em] text-cyan">
                   LEADERSHIP
@@ -137,9 +145,11 @@ function OurTeam() {
                 key={member.name}
                 className="rounded-2xl border border-border bg-surface p-6"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-cyan/10 text-lg font-bold text-cyan">
-                  {member.name.charAt(0)}
-                </div>
+                <img
+  src={member.image}
+  alt={member.name}
+  className="h-12 w-12 rounded-xl object-cover border border-cyan/40"
+/>
 
                 <h3 className="mt-5 text-xl font-bold text-white">
                   {member.name}
