@@ -1,6 +1,97 @@
-// Phase 5B intentionally starts empty. Phase 5C will connect this experience
-// to Supabase Storage and the Admin Control Center.
-export const portfolioProjects = [];
+export const portfolioProjects = [
+  {
+    id: "template-01",
+    title: "Template — DEMO 01",
+    description: "Click to watch this community system demonstration.",
+    categories: ["Community Development", "Video"],
+    videoUrl: "/videos/template-video-01.mp4",
+  },
+  {
+    id: "template-02",
+    title: "Template — DEMO 02",
+    description: "Click to watch this community system demonstration.",
+    categories: ["Community Development", "Video"],
+    videoUrl: "/videos/template-video-02.mp4",
+  },
+  {
+    id: "template-03",
+    title: "Template — DEMO 03",
+    description: "Click to watch this community system demonstration.",
+    categories: ["Community Development", "Video"],
+    videoUrl: "/videos/template-video-03.mp4",
+  },
+  {
+    id: "template-04",
+    title: "Template — DEMO 04",
+    description: "Click to watch this community system demonstration.",
+    categories: ["Community Development", "Video"],
+    videoUrl: "/videos/template-video-04.mp4",
+  },
+  {
+    id: "template-05",
+    title: "Template — DEMO 05",
+    description: "Click to watch this community system demonstration.",
+    categories: ["Community Development", "Video"],
+    videoUrl: "/videos/template-video-05.mp4",
+  },
+  {
+    id: "template-06",
+    title: "Template — DEMO 06",
+    description: "Click to watch this community system demonstration.",
+    categories: ["Community Development", "Video"],
+    videoUrl: "/videos/template-video-06.mp4",
+  },
+
+  {
+    id: "verification-01",
+    title: "Verification — DEMO 01",
+    description: "Click to watch this verification system demonstration.",
+    categories: ["Systems", "Video"],
+    videoUrl: "/videos/verification-video-01.mp4",
+  },
+  {
+    id: "verification-02",
+    title: "Verification — DEMO 02",
+    description: "Click to watch this verification system demonstration.",
+    categories: ["Systems", "Video"],
+    videoUrl: "/videos/verification-video-02.mp4",
+  },
+  {
+    id: "verification-03",
+    title: "Verification — DEMO 03",
+    description: "Click to watch this verification system demonstration.",
+    categories: ["Systems", "Video"],
+    videoUrl: "/videos/verification-video-03.mp4",
+  },
+  {
+    id: "verification-04",
+    title: "Verification — DEMO 04",
+    description: "Click to watch this verification system demonstration.",
+    categories: ["Systems", "Video"],
+    videoUrl: "/videos/verification-video-04.mp4",
+  },
+  {
+    id: "verification-05",
+    title: "Verification — DEMO 05",
+    description: "Click to watch this verification system demonstration.",
+    categories: ["Systems", "Video"],
+    videoUrl: "/videos/verification-video-05.mp4",
+  },
+  {
+    id: "verification-06",
+    title: "Verification — DEMO 06",
+    description: "Click to watch this verification system demonstration.",
+    categories: ["Systems", "Video"],
+    videoUrl: "/videos/verification-video-06.mp4",
+  },
+  {
+    id: "verification-07",
+    title: "Verification — DEMO 07",
+    description: "Click to watch this verification system demonstration.",
+    categories: ["Systems", "Video"],
+    videoUrl: "/videos/verification-video-07.mp4",
+  },
+];
 
 export const portfolioCategories = [
   "All Work",
