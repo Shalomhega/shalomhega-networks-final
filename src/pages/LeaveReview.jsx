@@ -38,9 +38,15 @@ function LeaveReview() {
         const { data } = supabase.storage.from("review-profile-images").getPublicUrl(path);
         profile_image_url = data.publicUrl;
       }
-      const { error } = await supabase.from("reviews").insert({ name:form.name.trim(), project_type:form.project_type, review:form.review.trim(), profile_image_url });
+      const { error } = await supabase.from("reviews").insert({
+  name: form.name.trim(),
+  project_type: form.project_type,
+  review: form.review.trim(),
+  rating: form.rating,
+  profile_image_url
+});
       if (error) throw error;
-      setForm({ name:"",project_type:"",review:"" }); setImage(null); setPreview(""); setState({loading:false,error:"",success:true});
+      setForm({ name:"", project_type:"", review:"", rating: 0 }); setImage(null); setPreview(""); setState({loading:false,error:"",success:true});
     } catch (err) { setState({loading:false,error:"We could not submit your review right now. Please try again later.",success:false}); }
   }
 
@@ -53,6 +59,24 @@ function LeaveReview() {
         <label className="grid gap-2 text-sm font-medium">NAME<input value={form.name} onChange={e=>update("name",e.target.value)} placeholder="Your name" className="rounded-xl border border-border bg-background px-4 py-3.5 outline-none focus:border-cyan" /></label>
         <div><div className="mb-2 flex items-center justify-between text-sm font-medium"><span>PROFILE IMAGE</span><span className="text-ink-muted text-xs">OPTIONAL</span></div><label className="flex cursor-pointer items-center gap-4 rounded-2xl border border-dashed border-border bg-background/70 p-5 hover:border-cyan/60"><div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-purple/20 text-xl">{preview ? <img src={preview} alt="Preview" className="h-full w-full object-cover" /> : initials}</div><div><p className="font-medium">Upload a profile image</p><p className="mt-1 text-xs text-ink-muted">JPEG, PNG, or WEBP, maximum 5 MB</p></div><input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={e=>chooseImage(e.target.files?.[0])}/></label></div>
         <label className="grid gap-2 text-sm font-medium">PROJECT TYPE<select value={form.project_type} onChange={e=>update("project_type",e.target.value)} className="rounded-xl border border-border bg-background px-4 py-3.5 outline-none focus:border-cyan"><option value="">Select your project type</option>{projectTypes.map(x=><option key={x}>{x}</option>)}</select></label>
+        <div className="grid gap-2">
+  <span className="text-sm font-medium">YOUR RATING</span>
+
+  <div className="flex gap-2">
+    {[1, 2, 3, 4, 5].map((star) => (
+      <button
+        key={star}
+        type="button"
+        onClick={() => update("rating", star)}
+        className={`text-3xl ${
+          star <= form.rating ? "text-yellow-400" : "text-gray-500"
+        }`}
+      >
+        ★
+      </button>
+    ))}
+  </div>
+</div>
         <label className="grid gap-2 text-sm font-medium">YOUR REVIEW<textarea value={form.review} onChange={e=>update("review",e.target.value.slice(0,1500))} placeholder="Tell us about your experience working with SHALOMHEGA NETWORKS..." rows="7" className="resize-y rounded-xl border border-border bg-background px-4 py-3.5 outline-none focus:border-cyan" /><span className="text-right text-xs text-ink-muted">{form.review.length}/1500</span></label>
       </div>
       <p className="mt-7 text-sm leading-7 text-ink-muted">Reviews are checked before appearing publicly. Once your review is approved, it is usually published within approximately 5 to 10 minutes.</p>
