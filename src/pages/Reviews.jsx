@@ -21,7 +21,7 @@ function Reviews() {
       ★
     </span>
   ))}
-</div>></div></div><p className="mt-6 leading-8 text-ink-muted">{r.review}</p></article>)}</div>}
+</div></div></div><p className="mt-6 leading-8 text-ink-muted">{r.review}</p></article>)}</div>}
  </Section><Section><div className="rounded-3xl border border-border bg-gradient-to-br from-purple/10 to-cyan/5 p-8 sm:p-12"><p className="text-cyan text-sm font-semibold">SHARE YOUR EXPERIENCE</p><h2 className="mt-3 text-3xl font-bold">Worked with us on your community?</h2><p className="mt-4 max-w-2xl text-ink-muted leading-7">Your feedback can help future clients understand the development experience.</p><Link to="/leave-a-review" className="mt-6 inline-flex rounded-full bg-purple px-6 py-3 font-medium">LEAVE A REVIEW</Link></div></Section></main>
 }
 export default Reviews;
