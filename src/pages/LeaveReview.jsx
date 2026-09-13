@@ -7,7 +7,7 @@ const projectTypes = ["Complete Community Development","Community Revamp","Commu
 const MAX_IMAGE = 5 * 1024 * 1024;
 
 function LeaveReview() {
-  const [form, setForm] = useState({ name: "", project_type: "", review: "" });
+  const [form, setForm] = useState({ name: "", project_type: "", review: "", rating: 0 });
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState("");
   const [state, setState] = useState({ loading: false, error: "", success: false });
