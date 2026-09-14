@@ -113,7 +113,8 @@ function LeaveReview() {
     if (!image) {
       setState({
         loading: false,
-        error: "Please upload your channel or profile picture before submitting your review.",
+        error:
+          "Please upload your channel or profile picture before submitting your review.",
         success: false,
       });
 
@@ -133,7 +134,8 @@ function LeaveReview() {
     if (!form.rating || form.rating < 1) {
       setState({
         loading: false,
-        error: "Please select your star rating before submitting your review.",
+        error:
+          "Please select your star rating before submitting your review.",
         success: false,
       });
 
@@ -214,19 +216,16 @@ function LeaveReview() {
       // SAVE REVIEW TO SUPABASE
       // =========================
 
-      const { data: reviewData, error: reviewError } =
-        await supabase
-          .from("reviews")
-          .insert({
-            name: form.name.trim(),
-            project_type: form.project_type,
-            review: form.review.trim(),
-            rating: Number(form.rating),
-            profile_image_url,
-            approved: false,
-          })
-          .select()
-          .single();
+      const { error: reviewError } = await supabase
+        .from("reviews")
+        .insert({
+          name: form.name.trim(),
+          project_type: form.project_type,
+          review: form.review.trim(),
+          rating: Number(form.rating),
+          profile_image_url,
+          approved: false,
+        });
 
       if (reviewError) {
         throw new Error(
@@ -249,12 +248,11 @@ function LeaveReview() {
             },
 
             body: JSON.stringify({
-              id: reviewData.id,
-              name: reviewData.name,
-              project_type: reviewData.project_type,
-              review: reviewData.review,
-              rating: reviewData.rating,
-              profile_image_url: reviewData.profile_image_url,
+              name: form.name.trim(),
+              project_type: form.project_type,
+              review: form.review.trim(),
+              rating: Number(form.rating),
+              profile_image_url,
             }),
           }
         );
