@@ -70,7 +70,7 @@ function LeaveReview() {
     if (file.size > MAX_IMAGE) {
       setState({
         loading: false,
-        error: "Profile images must be 5 MB or smaller.",
+        error: "Your channel profile image must be 5 MB or smaller.",
         success: false,
       });
 
@@ -97,18 +97,33 @@ function LeaveReview() {
     event.preventDefault();
 
     // =========================
-    // VALIDATION
+    // FORM VALIDATION
     // =========================
 
-    if (
-      !form.name.trim() ||
-      !form.project_type ||
-      form.review.trim().length < 10
-    ) {
+    if (!form.name.trim()) {
       setState({
         loading: false,
-        error:
-          "Please complete your name, project type, and a review of at least 10 characters.",
+        error: "Please enter your name.",
+        success: false,
+      });
+
+      return;
+    }
+
+    if (!image) {
+      setState({
+        loading: false,
+        error: "Please upload your channel or profile picture before submitting your review.",
+        success: false,
+      });
+
+      return;
+    }
+
+    if (!form.project_type) {
+      setState({
+        loading: false,
+        error: "Please select the type of project we worked on.",
         success: false,
       });
 
@@ -118,7 +133,17 @@ function LeaveReview() {
     if (!form.rating || form.rating < 1) {
       setState({
         loading: false,
-        error: "Please select a star rating before submitting your review.",
+        error: "Please select your star rating before submitting your review.",
+        success: false,
+      });
+
+      return;
+    }
+
+    if (form.review.trim().length < 10) {
+      setState({
+        loading: false,
+        error: "Please write a review of at least 10 characters.",
         success: false,
       });
 
@@ -133,7 +158,7 @@ function LeaveReview() {
       setState({
         loading: false,
         error:
-          "The review system is not configured yet. Please check the Supabase environment variables.",
+          "The review system is not configured correctly yet. Please check the Supabase settings.",
         success: false,
       });
 
@@ -150,35 +175,39 @@ function LeaveReview() {
 
     try {
       // =========================
-      // UPLOAD PROFILE IMAGE
+      // UPLOAD CHANNEL PROFILE IMAGE
       // =========================
 
-      if (image) {
-        const extension = image.name
-          .split(".")
-          .pop()
-          .toLowerCase();
+      const extension = image.name
+        .split(".")
+        .pop()
+        .toLowerCase();
 
-        const filePath = `public/${crypto.randomUUID()}.${extension}`;
+      const filePath = `public/${crypto.randomUUID()}.${extension}`;
 
-        const { error: uploadError } = await supabase.storage
-          .from("review-profile-images")
-          .upload(filePath, image, {
-            contentType: image.type,
-            upsert: false,
-          });
+      const { error: uploadError } = await supabase.storage
+        .from("review-profile-images")
+        .upload(filePath, image, {
+          contentType: image.type,
+          upsert: false,
+        });
 
-        if (uploadError) {
-          throw new Error(
-            `Profile image upload failed: ${uploadError.message}`
-          );
-        }
+      if (uploadError) {
+        throw new Error(
+          `Channel profile image upload failed: ${uploadError.message}`
+        );
+      }
 
-        const { data: publicUrlData } = supabase.storage
-          .from("review-profile-images")
-          .getPublicUrl(filePath);
+      const { data: publicUrlData } = supabase.storage
+        .from("review-profile-images")
+        .getPublicUrl(filePath);
 
-        profile_image_url = publicUrlData?.publicUrl || null;
+      profile_image_url = publicUrlData?.publicUrl || null;
+
+      if (!profile_image_url) {
+        throw new Error(
+          "We could not generate the public URL for your profile image."
+        );
       }
 
       // =========================
@@ -225,13 +254,14 @@ function LeaveReview() {
               project_type: reviewData.project_type,
               review: reviewData.review,
               rating: reviewData.rating,
+              profile_image_url: reviewData.profile_image_url,
             }),
           }
         );
 
         if (!notificationResponse.ok) {
           console.error(
-            "Discord notification could not be sent."
+            "The review was saved, but the Discord notification could not be sent."
           );
         }
       } catch (notificationError) {
@@ -298,8 +328,8 @@ function LeaveReview() {
           </h1>
 
           <p className="mt-6 text-lg leading-8 text-ink-muted">
-            Your feedback can help other streamers, creators, and community
-            owners understand what it is like to work with SHALOMHEGA NETWORKS.
+            Your feedback helps other streamers, creators, and community owners
+            understand what it is like to work with SHALOMHEGA NETWORKS.
           </p>
 
         </div>
@@ -329,8 +359,9 @@ function LeaveReview() {
               </p>
 
               <p className="mt-2">
-                Thank you for sharing your experience. Your review is now
-                waiting for approval before appearing publicly.
+                Thank you for sharing your experience. Your review has been
+                received and is now waiting for approval before appearing
+                publicly.
               </p>
 
             </div>
@@ -373,39 +404,44 @@ function LeaveReview() {
                 onChange={(event) =>
                   update("name", event.target.value)
                 }
-                placeholder="Your name"
-                className="rounded-xl border border-border bg-background px-4 py-3.5 outline-none focus:border-cyan"
+                placeholder="Your name or creator name"
+                className="rounded-xl border border-border bg-background px-4 py-3.5 outline-none transition focus:border-cyan"
               />
 
             </label>
 
 
             {/* ========================= */}
-            {/* PROFILE IMAGE */}
+            {/* CHANNEL PROFILE IMAGE */}
             {/* ========================= */}
 
             <div>
 
               <div className="mb-2 flex items-center justify-between text-sm font-medium">
 
-                <span>PROFILE IMAGE</span>
+                <span>CHANNEL PROFILE IMAGE</span>
 
-                <span className="text-xs text-ink-muted">
-                  OPTIONAL
+                <span className="text-xs font-semibold text-cyan">
+                  REQUIRED
                 </span>
 
               </div>
 
+              <p className="mb-3 text-xs leading-6 text-ink-muted">
+                Upload your channel profile picture or creator PFP so your
+                review can be clearly identified when it is published.
+              </p>
+
 
               <label className="flex cursor-pointer items-center gap-4 rounded-2xl border border-dashed border-border bg-background/70 p-5 transition hover:border-cyan/60">
 
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-purple/20 text-xl">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-purple/20 text-xl">
 
                   {preview ? (
 
                     <img
                       src={preview}
-                      alt="Profile preview"
+                      alt="Channel profile preview"
                       className="h-full w-full object-cover"
                     />
 
@@ -421,11 +457,13 @@ function LeaveReview() {
                 <div>
 
                   <p className="font-medium">
-                    Upload a profile image
+                    {preview
+                      ? "Channel profile image selected"
+                      : "Upload your channel profile picture"}
                   </p>
 
                   <p className="mt-1 text-xs text-ink-muted">
-                    JPEG, PNG, or WEBP, maximum 5 MB
+                    JPEG, PNG, or WEBP • Maximum 5 MB
                   </p>
 
                 </div>
@@ -458,7 +496,7 @@ function LeaveReview() {
                 onChange={(event) =>
                   update("project_type", event.target.value)
                 }
-                className="rounded-xl border border-border bg-background px-4 py-3.5 outline-none focus:border-cyan"
+                className="rounded-xl border border-border bg-background px-4 py-3.5 outline-none transition focus:border-cyan"
               >
 
                 <option value="">
@@ -487,9 +525,17 @@ function LeaveReview() {
 
             <div className="grid gap-2">
 
-              <span className="text-sm font-medium">
-                YOUR RATING
-              </span>
+              <div className="flex items-center justify-between">
+
+                <span className="text-sm font-medium">
+                  YOUR RATING
+                </span>
+
+                <span className="text-xs font-semibold text-cyan">
+                  REQUIRED
+                </span>
+
+              </div>
 
               <div className="flex gap-2">
 
@@ -534,7 +580,7 @@ function LeaveReview() {
                 }
                 placeholder="Tell us about your experience working with SHALOMHEGA NETWORKS..."
                 rows="7"
-                className="resize-y rounded-xl border border-border bg-background px-4 py-3.5 outline-none focus:border-cyan"
+                className="resize-y rounded-xl border border-border bg-background px-4 py-3.5 outline-none transition focus:border-cyan"
               />
 
               <span className="text-right text-xs text-ink-muted">
@@ -552,8 +598,9 @@ function LeaveReview() {
 
           <p className="mt-7 text-sm leading-7 text-ink-muted">
 
-            Reviews are checked before appearing publicly. Once approved,
-            your review will become visible on the reviews page.
+            Reviews are checked before appearing publicly. Once approved, your
+            review and channel profile image will appear on the SHALOMHEGA
+            NETWORKS reviews page.
 
           </p>
 
