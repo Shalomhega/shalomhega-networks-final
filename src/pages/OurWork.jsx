@@ -311,4 +311,665 @@ function OurWork() {
 
       <Section className="px-6 py-16 sm:py-20">
 
-        <div className="
+        <div className="mx-auto max-w-6xl">
+
+          <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+
+            <div>
+
+              <p className="text-xs font-semibold tracking-[0.22em] text-cyan">
+                COMMUNITY SYSTEM SHOWCASE
+              </p>
+
+              <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
+                EXPLORE THE VIDEO WORK
+              </h2>
+
+            </div>
+
+            <p className="max-w-xl text-sm leading-6 text-ink-muted">
+              Explore real examples of community systems and development work.
+              Select any video to watch the full experience.
+            </p>
+
+          </div>
+
+
+          {/* ========================= */}
+          {/* VIDEO FILTERS */}
+          {/* ========================= */}
+
+          <div className="mb-10 flex flex-wrap gap-2">
+
+            {videoCategories.map((item) => (
+
+              <button
+                key={item}
+                onClick={() => setVideoCategory(item)}
+                className={`rounded-full border px-4 py-2 text-sm transition ${
+                  videoCategory === item
+                    ? "border-cyan bg-cyan/10 text-cyan"
+                    : "border-border text-ink-muted hover:border-purple/50 hover:text-ink"
+                }`}
+              >
+                {item}
+              </button>
+
+            ))}
+
+          </div>
+
+
+          {/* ========================= */}
+          {/* VIDEO COUNT */}
+          {/* ========================= */}
+
+          <p className="mb-6 text-sm text-ink-muted">
+
+            Showing{" "}
+
+            <span className="font-semibold text-cyan">
+              {filteredVideos.length}
+            </span>{" "}
+
+            {filteredVideos.length === 1 ? "video" : "videos"}
+
+          </p>
+
+
+          {/* ========================= */}
+          {/* VIDEO CARDS */}
+          {/* ========================= */}
+
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+            {filteredVideos.map((video) => (
+
+              <button
+                key={video.id}
+                onClick={() => setSelectedVideo(video)}
+                className="group overflow-hidden rounded-2xl border border-border bg-surface text-left transition hover:-translate-y-1 hover:border-purple/60"
+              >
+
+                {/* VIDEO PREVIEW */}
+
+                <div className="relative aspect-video overflow-hidden bg-black">
+
+                  <video
+                    src={video.video}
+                    muted
+                    preload="metadata"
+                    className="h-full w-full object-cover opacity-70 transition duration-300 group-hover:scale-105 group-hover:opacity-90"
+                  />
+
+                  <div className="absolute inset-0 bg-black/20" />
+
+                  <div className="absolute left-4 top-4 rounded-full border border-cyan/50 bg-brand-field/80 px-3 py-1 text-xs font-semibold tracking-[0.15em] text-cyan backdrop-blur">
+                    VIDEO DEMO
+                  </div>
+
+
+                  {/* PLAY BUTTON */}
+
+                  <div className="absolute inset-0 flex items-center justify-center">
+
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/30 bg-black/50 text-2xl text-cyan backdrop-blur transition group-hover:scale-110 group-hover:border-cyan">
+                      ▶
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                {/* VIDEO INFORMATION */}
+
+                <div className="p-6">
+
+                  <div className="flex items-center justify-between gap-4">
+
+                    <p className="text-xs font-semibold tracking-[0.22em] text-cyan">
+                      {video.number}
+                    </p>
+
+                    <span className="text-xs font-semibold tracking-[0.14em] text-purple">
+                      {video.category.toUpperCase()}
+                    </span>
+
+                  </div>
+
+                  <h3 className="mt-4 text-2xl font-semibold">
+                    {video.title}
+                  </h3>
+
+                  <p className="mt-3 text-sm leading-6 text-ink-muted">
+                    {video.description}
+                  </p>
+
+                </div>
+
+              </button>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </Section>
+
+
+      {/* ========================= */}
+      {/* PROJECT SHOWCASE */}
+      {/* ========================= */}
+
+      <Section className="border-t border-border px-6 py-16 sm:py-20">
+
+        <div className="mx-auto max-w-6xl">
+
+          <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+
+            <div>
+
+              <p className="text-xs font-semibold tracking-[0.22em] text-cyan">
+                PROJECT SHOWCASE
+              </p>
+
+              <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
+                EXPLORE THE PORTFOLIO
+              </h2>
+
+            </div>
+
+            <p className="max-w-xl text-sm leading-6 text-ink-muted">
+              Explore real community development, branding, systems, and project
+              work published directly from the SHALOMHEGA NETWORKS portfolio.
+            </p>
+
+          </div>
+
+
+          {/* ========================= */}
+          {/* PROJECT FILTERS */}
+          {/* ========================= */}
+
+          <div className="mb-10 flex flex-wrap gap-2">
+
+            {projectCategories.map((item) => (
+
+              <button
+                key={item}
+                onClick={() => setCategory(item)}
+                className={`rounded-full border px-4 py-2 text-sm transition ${
+                  category === item
+                    ? "border-cyan bg-cyan/10 text-cyan"
+                    : "border-border text-ink-muted hover:border-purple/50 hover:text-ink"
+                }`}
+              >
+                {item}
+              </button>
+
+            ))}
+
+          </div>
+
+
+          {/* ========================= */}
+          {/* PROJECT LOADING */}
+          {/* ========================= */}
+
+          {projectsLoading && (
+
+            <div className="rounded-3xl border border-border bg-surface/60 p-10 text-center">
+
+              <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
+                LOADING PORTFOLIO
+              </p>
+
+              <p className="mt-3 text-ink-muted">
+                Loading the latest published projects...
+              </p>
+
+            </div>
+
+          )}
+
+
+          {/* ========================= */}
+          {/* PROJECT ERROR */}
+          {/* ========================= */}
+
+          {!projectsLoading && projectsError && (
+
+            <div className="rounded-3xl border border-red-500/30 bg-surface/60 p-10 text-center">
+
+              <p className="text-xs font-semibold tracking-[0.2em] text-purple">
+                PORTFOLIO UNAVAILABLE
+              </p>
+
+              <p className="mt-3 text-ink-muted">
+                {projectsError}
+              </p>
+
+            </div>
+
+          )}
+
+
+          {/* ========================= */}
+          {/* PROJECT CARDS */}
+          {/* ========================= */}
+
+          {!projectsLoading &&
+            !projectsError &&
+            filteredProjects.length > 0 && (
+
+              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+                {filteredProjects.map((project) => {
+
+                  const mediaUrl = getProjectMediaUrl(project);
+                  const mediaType = getMediaType(project);
+
+                  return (
+
+                    <button
+                      key={project.id}
+                      onClick={() => setSelectedProject(project)}
+                      className="group overflow-hidden rounded-2xl border border-border bg-surface text-left transition hover:-translate-y-1 hover:border-purple/60"
+                    >
+
+                      {/* PROJECT MEDIA */}
+
+                      <div className="relative aspect-video overflow-hidden bg-black">
+
+                        {mediaUrl && mediaType === "video" && (
+
+                          <video
+                            src={mediaUrl}
+                            muted
+                            preload="metadata"
+                            className="h-full w-full object-cover opacity-70 transition duration-300 group-hover:scale-105 group-hover:opacity-90"
+                          />
+
+                        )}
+
+                        {mediaUrl && mediaType !== "video" && (
+
+                          <img
+                            src={mediaUrl}
+                            alt={project.title}
+                            className="h-full w-full object-cover opacity-80 transition duration-300 group-hover:scale-105 group-hover:opacity-100"
+                          />
+
+                        )}
+
+                        {!mediaUrl && (
+
+                          <div className="flex h-full w-full items-center justify-center text-sm text-ink-muted">
+                            PROJECT MEDIA
+                          </div>
+
+                        )}
+
+                        <div className="absolute inset-0 bg-black/20" />
+
+
+                        {/* MEDIA LABEL */}
+
+                        <div className="absolute left-4 top-4 rounded-full border border-cyan/50 bg-brand-field/80 px-3 py-1 text-xs font-semibold tracking-[0.15em] text-cyan backdrop-blur">
+
+                          {mediaType === "video"
+                            ? "VIDEO PROJECT"
+                            : "PROJECT MEDIA"}
+
+                        </div>
+
+
+                        {/* VIEW BUTTON */}
+
+                        <div className="absolute inset-0 flex items-center justify-center">
+
+                          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/30 bg-black/50 text-2xl text-cyan backdrop-blur transition group-hover:scale-110 group-hover:border-cyan">
+
+                            {mediaType === "video" ? "▶" : "↗"}
+
+                          </div>
+
+                        </div>
+
+                      </div>
+
+
+                      {/* PROJECT INFORMATION */}
+
+                      <div className="p-6">
+
+                        <div className="flex items-center justify-between gap-4">
+
+                          <p className="text-xs font-semibold tracking-[0.18em] text-cyan">
+                            PROJECT
+                          </p>
+
+                          <span className="text-xs font-semibold tracking-[0.14em] text-purple">
+
+                            {(project.category || "Portfolio").toUpperCase()}
+
+                          </span>
+
+                        </div>
+
+                        <h3 className="mt-4 text-2xl font-semibold">
+                          {project.title}
+                        </h3>
+
+                        {project.description && (
+
+                          <p className="mt-3 text-sm leading-6 text-ink-muted">
+                            {project.description}
+                          </p>
+
+                        )}
+
+                      </div>
+
+                    </button>
+
+                  );
+                })}
+
+              </div>
+
+            )}
+
+
+          {/* ========================= */}
+          {/* EMPTY PROJECT STATE */}
+          {/* ========================= */}
+
+          {!projectsLoading &&
+            !projectsError &&
+            filteredProjects.length === 0 && (
+
+              <div className="rounded-3xl border border-border bg-surface/60 p-6 sm:p-10">
+
+                <div className="grid gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
+
+                  <div className="flex min-h-[280px] items-center justify-center rounded-2xl border border-dashed border-border bg-brand-field/30">
+
+                    <p className="text-center text-xs font-semibold tracking-[0.2em] text-ink-muted">
+                      REAL PROJECT MEDIA WILL APPEAR HERE
+                    </p>
+
+                  </div>
+
+                  <div>
+
+                    <p className="text-xs font-semibold tracking-[0.2em] text-purple">
+                      PORTFOLIO IN PROGRESS
+                    </p>
+
+                    <h3 className="mt-3 text-2xl font-semibold sm:text-3xl">
+                      REAL WORK DESERVES A REAL SHOWCASE
+                    </h3>
+
+                    <p className="mt-4 max-w-xl leading-7 text-ink-muted">
+
+                      {category === "All Work"
+                        ? "New published projects from the SHALOMHEGA NETWORKS portfolio will automatically appear here."
+                        : `No published projects are currently available under ${category}.`}
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            )}
+
+        </div>
+
+      </Section>
+
+
+      {/* ========================= */}
+      {/* HOW TO EXPLORE */}
+      {/* ========================= */}
+
+      <Section className="border-t border-border px-6 py-16 sm:py-20">
+
+        <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
+
+          {[
+            [
+              "01",
+              "WATCH REAL SYSTEMS",
+              "Explore demonstrations of real community systems and development work.",
+            ],
+            [
+              "02",
+              "PLAY WHEN READY",
+              "Videos are not forced to autoplay. Visitors choose what they want to watch.",
+            ],
+            [
+              "03",
+              "MORE WORK COMING",
+              "New published portfolio projects automatically appear as the work continues to grow.",
+            ],
+          ].map(([number, title, text]) => (
+
+            <div
+              key={number}
+              className="rounded-2xl border border-border bg-surface/60 p-6"
+            >
+
+              <span className="text-xs font-semibold tracking-[0.2em] text-cyan">
+                {number}
+              </span>
+
+              <h3 className="mt-4 text-xl font-semibold">
+                {title}
+              </h3>
+
+              <p className="mt-3 text-sm leading-6 text-ink-muted">
+                {text}
+              </p>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </Section>
+
+
+      {/* ========================= */}
+      {/* CTA */}
+      {/* ========================= */}
+
+      <section className="border-t border-border px-6 py-20 text-center">
+
+        <div className="mx-auto max-w-2xl">
+
+          <p className="text-xs font-semibold tracking-[0.22em] text-cyan">
+            HAVE A PROJECT IN MIND
+          </p>
+
+          <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">
+            LET'S TALK ABOUT WHAT YOU WANT TO BUILD
+          </h2>
+
+          <p className="mt-5 leading-7 text-ink-muted">
+            Start with your direction, and we can explore the right development
+            approach for your community.
+          </p>
+
+          <Link
+            to="/start-your-project"
+            className="mt-8 inline-flex rounded-full bg-purple px-6 py-3 text-sm font-semibold text-ink transition hover:bg-blue"
+          >
+            START YOUR PROJECT
+          </Link>
+
+        </div>
+
+      </section>
+
+
+      {/* ========================= */}
+      {/* EXISTING VIDEO MODAL */}
+      {/* ========================= */}
+
+      {selectedVideo && (
+
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          onClick={() => setSelectedVideo(null)}
+        >
+
+          <div
+            className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-border bg-surface p-4"
+            onClick={(event) => event.stopPropagation()}
+          >
+
+            <button
+              onClick={() => setSelectedVideo(null)}
+              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
+              aria-label="Close video"
+            >
+              ×
+            </button>
+
+            <div className="mb-4 pr-12">
+
+              <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
+                {selectedVideo.category.toUpperCase()}
+              </p>
+
+              <h2 className="mt-2 text-2xl font-semibold">
+                {selectedVideo.title} — {selectedVideo.number}
+              </h2>
+
+            </div>
+
+            <video
+              key={selectedVideo.video}
+              controls
+              autoPlay
+              playsInline
+              className="w-full rounded-xl bg-black"
+            >
+
+              <source
+                src={selectedVideo.video}
+                type="video/mp4"
+              />
+
+              Your browser does not support the video tag.
+
+            </video>
+
+          </div>
+
+        </div>
+
+      )}
+
+
+      {/* ========================= */}
+      {/* SUPABASE PROJECT MODAL */}
+      {/* ========================= */}
+
+      {selectedProject && (
+
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          onClick={() => setSelectedProject(null)}
+        >
+
+          <div
+            className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-border bg-surface p-4"
+            onClick={(event) => event.stopPropagation()}
+          >
+
+            <button
+              onClick={() => setSelectedProject(null)}
+              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
+              aria-label="Close project"
+            >
+              ×
+            </button>
+
+            <div className="mb-4 pr-12">
+
+              <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
+
+                {(selectedProject.category || "Portfolio").toUpperCase()}
+
+              </p>
+
+              <h2 className="mt-2 text-2xl font-semibold">
+                {selectedProject.title}
+              </h2>
+
+              {selectedProject.description && (
+
+                <p className="mt-3 leading-7 text-ink-muted">
+                  {selectedProject.description}
+                </p>
+
+              )}
+
+            </div>
+
+
+            {/* PROJECT VIDEO */}
+
+            {getMediaType(selectedProject) === "video" && (
+
+              <video
+                key={getProjectMediaUrl(selectedProject)}
+                controls
+                autoPlay
+                playsInline
+                className="w-full rounded-xl bg-black"
+              >
+
+                <source
+                  src={getProjectMediaUrl(selectedProject)}
+                  type="video/mp4"
+                />
+
+                Your browser does not support the video tag.
+
+              </video>
+
+            )}
+
+
+            {/* PROJECT IMAGE */}
+
+            {getMediaType(selectedProject) !== "video" && (
+
+              <img
+                src={getProjectMediaUrl(selectedProject)}
+                alt={selectedProject.title}
+                className="w-full rounded-xl object-contain"
+              />
+
+            )}
+
+          </div>
+
+        </div>
+
+      )}
+
+    </main>
+  );
+}
+
+export default OurWork;
