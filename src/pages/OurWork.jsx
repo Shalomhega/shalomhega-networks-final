@@ -84,6 +84,18 @@ const showcaseVideos = [
       video: `/videos/roles-video-${number}.mp4`,
     };
   }),
+
+  // =========================
+  // FAQ SYSTEM VIDEOS
+  // =========================
+  {
+    id: "faq-01",
+    category: "FAQ System",
+    number: "DEMO 01",
+    title: "FAQ System",
+    description: "Click to watch this community FAQ system demonstration.",
+    video: "/videos/faq-video-01.mp4",
+  },
 ];
 
 const videoCategories = [
@@ -93,6 +105,7 @@ const videoCategories = [
   "Welcome System",
   "Rules System",
   "Roles System",
+  "FAQ System",
 ];
 
 // =========================
@@ -172,8 +185,6 @@ function OurWork() {
 
   useEffect(() => {
     async function loadProjects() {
-      // Prevent unnecessary loading
-      // if Supabase is not configured.
       if (!isSupabaseConfigured || !supabase) {
         setProjects([]);
         setProjectsLoading(false);
@@ -304,7 +315,6 @@ function OurWork() {
         </div>
       </section>
 
-
       {/* ========================= */}
       {/* VIDEO SHOWCASE */}
       {/* ========================= */}
@@ -334,10 +344,7 @@ function OurWork() {
 
           </div>
 
-
-          {/* ========================= */}
           {/* VIDEO FILTERS */}
-          {/* ========================= */}
 
           <div className="mb-10 flex flex-wrap gap-2">
 
@@ -359,10 +366,7 @@ function OurWork() {
 
           </div>
 
-
-          {/* ========================= */}
           {/* VIDEO COUNT */}
-          {/* ========================= */}
 
           <p className="mb-6 text-sm text-ink-muted">
 
@@ -376,10 +380,7 @@ function OurWork() {
 
           </p>
 
-
-          {/* ========================= */}
           {/* VIDEO CARDS */}
-          {/* ========================= */}
 
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
@@ -390,8 +391,6 @@ function OurWork() {
                 onClick={() => setSelectedVideo(video)}
                 className="group overflow-hidden rounded-2xl border border-border bg-surface text-left transition hover:-translate-y-1 hover:border-purple/60"
               >
-
-                {/* VIDEO PREVIEW */}
 
                 <div className="relative aspect-video overflow-hidden bg-black">
 
@@ -408,9 +407,6 @@ function OurWork() {
                     VIDEO DEMO
                   </div>
 
-
-                  {/* PLAY BUTTON */}
-
                   <div className="absolute inset-0 flex items-center justify-center">
 
                     <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/30 bg-black/50 text-2xl text-cyan backdrop-blur transition group-hover:scale-110 group-hover:border-cyan">
@@ -420,9 +416,6 @@ function OurWork() {
                   </div>
 
                 </div>
-
-
-                {/* VIDEO INFORMATION */}
 
                 <div className="p-6">
 
@@ -458,7 +451,6 @@ function OurWork() {
 
       </Section>
 
-
       {/* ========================= */}
       {/* PROJECT SHOWCASE */}
       {/* ========================= */}
@@ -488,10 +480,7 @@ function OurWork() {
 
           </div>
 
-
-          {/* ========================= */}
           {/* PROJECT FILTERS */}
-          {/* ========================= */}
 
           <div className="mb-10 flex flex-wrap gap-2">
 
@@ -513,10 +502,7 @@ function OurWork() {
 
           </div>
 
-
-          {/* ========================= */}
           {/* PROJECT LOADING */}
-          {/* ========================= */}
 
           {projectsLoading && (
 
@@ -534,10 +520,7 @@ function OurWork() {
 
           )}
 
-
-          {/* ========================= */}
           {/* PROJECT ERROR */}
-          {/* ========================= */}
 
           {!projectsLoading && projectsError && (
 
@@ -555,10 +538,7 @@ function OurWork() {
 
           )}
 
-
-          {/* ========================= */}
           {/* PROJECT CARDS */}
-          {/* ========================= */}
 
           {!projectsLoading &&
             !projectsError &&
@@ -578,8 +558,6 @@ function OurWork() {
                       onClick={() => setSelectedProject(project)}
                       className="group overflow-hidden rounded-2xl border border-border bg-surface text-left transition hover:-translate-y-1 hover:border-purple/60"
                     >
-
-                      {/* PROJECT MEDIA */}
 
                       <div className="relative aspect-video overflow-hidden bg-black">
 
@@ -614,9 +592,6 @@ function OurWork() {
 
                         <div className="absolute inset-0 bg-black/20" />
 
-
-                        {/* MEDIA LABEL */}
-
                         <div className="absolute left-4 top-4 rounded-full border border-cyan/50 bg-brand-field/80 px-3 py-1 text-xs font-semibold tracking-[0.15em] text-cyan backdrop-blur">
 
                           {mediaType === "video"
@@ -624,9 +599,6 @@ function OurWork() {
                             : "PROJECT MEDIA"}
 
                         </div>
-
-
-                        {/* VIEW BUTTON */}
 
                         <div className="absolute inset-0 flex items-center justify-center">
 
@@ -640,9 +612,6 @@ function OurWork() {
 
                       </div>
 
-
-                      {/* PROJECT INFORMATION */}
-
                       <div className="p-6">
 
                         <div className="flex items-center justify-between gap-4">
@@ -652,9 +621,7 @@ function OurWork() {
                           </p>
 
                           <span className="text-xs font-semibold tracking-[0.14em] text-purple">
-
                             {(project.category || "Portfolio").toUpperCase()}
-
                           </span>
 
                         </div>
@@ -682,10 +649,7 @@ function OurWork() {
 
             )}
 
-
-          {/* ========================= */}
           {/* EMPTY PROJECT STATE */}
-          {/* ========================= */}
 
           {!projectsLoading &&
             !projectsError &&
@@ -732,7 +696,6 @@ function OurWork() {
         </div>
 
       </Section>
-
 
       {/* ========================= */}
       {/* HOW TO EXPLORE */}
@@ -785,7 +748,6 @@ function OurWork() {
 
       </Section>
 
-
       {/* ========================= */}
       {/* CTA */}
       {/* ========================= */}
@@ -818,9 +780,8 @@ function OurWork() {
 
       </section>
 
-
       {/* ========================= */}
-      {/* EXISTING VIDEO MODAL */}
+      {/* VIDEO MODAL */}
       {/* ========================= */}
 
       {selectedVideo && (
@@ -878,7 +839,6 @@ function OurWork() {
 
       )}
 
-
       {/* ========================= */}
       {/* SUPABASE PROJECT MODAL */}
       {/* ========================= */}
@@ -906,9 +866,7 @@ function OurWork() {
             <div className="mb-4 pr-12">
 
               <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
-
                 {(selectedProject.category || "Portfolio").toUpperCase()}
-
               </p>
 
               <h2 className="mt-2 text-2xl font-semibold">
@@ -924,9 +882,6 @@ function OurWork() {
               )}
 
             </div>
-
-
-            {/* PROJECT VIDEO */}
 
             {getMediaType(selectedProject) === "video" && (
 
@@ -948,9 +903,6 @@ function OurWork() {
               </video>
 
             )}
-
-
-            {/* PROJECT IMAGE */}
 
             {getMediaType(selectedProject) !== "video" && (
 
