@@ -51,9 +51,13 @@ function LeaveReview() {
   function chooseImage(file) {
     if (!file) return;
 
-    if (
-      !["image/jpeg", "image/png", "image/webp"].includes(file.type)
-    ) {
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
       setState({
         loading: false,
         error: "Please choose a JPEG, PNG, or WEBP image.",
@@ -73,8 +77,14 @@ function LeaveReview() {
       return;
     }
 
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+
+    const imagePreview = URL.createObjectURL(file);
+
     setImage(file);
-    setPreview(URL.createObjectURL(file));
+    setPreview(imagePreview);
 
     setState({
       loading: false,
@@ -83,11 +93,11 @@ function LeaveReview() {
     });
   }
 
-  async function submit(e) {
-    e.preventDefault();
+  async function submit(event) {
+    event.preventDefault();
 
     // =========================
-    // FORM VALIDATION
+    // VALIDATION
     // =========================
 
     if (
@@ -105,11 +115,7 @@ function LeaveReview() {
       return;
     }
 
-    // =========================
-    // RATING VALIDATION
-    // =========================
-
-    if (!form.rating) {
+    if (!form.rating || form.rating < 1) {
       setState({
         loading: false,
         error: "Please select a star rating before submitting your review.",
@@ -120,14 +126,14 @@ function LeaveReview() {
     }
 
     // =========================
-    // SUPABASE CHECK
+    // CHECK SUPABASE
     // =========================
 
-    if (!isSupabaseConfigured) {
+    if (!isSupabaseConfigured || !supabase) {
       setState({
         loading: false,
         error:
-          "The review system is not configured yet. Add the Supabase environment variables to activate submissions.",
+          "The review system is not configured yet. Please check the Supabase environment variables.",
         success: false,
       });
 
@@ -148,45 +154,55 @@ function LeaveReview() {
       // =========================
 
       if (image) {
-        const ext = image.name.split(".").pop().toLowerCase();
+        const extension = image.name
+          .split(".")
+          .pop()
+          .toLowerCase();
 
-        const path = `public/${crypto.randomUUID()}.${ext}`;
+        const filePath = `public/${crypto.randomUUID()}.${extension}`;
 
         const { error: uploadError } = await supabase.storage
           .from("review-profile-images")
-          .upload(path, image, {
+          .upload(filePath, image, {
             contentType: image.type,
             upsert: false,
           });
 
         if (uploadError) {
-          throw uploadError;
+          throw new Error(
+            `Profile image upload failed: ${uploadError.message}`
+          );
         }
 
-        const { data } = supabase.storage
+        const { data: publicUrlData } = supabase.storage
           .from("review-profile-images")
-          .getPublicUrl(path);
+          .getPublicUrl(filePath);
 
-        profile_image_url = data.publicUrl;
+        profile_image_url = publicUrlData?.publicUrl || null;
       }
 
       // =========================
       // SAVE REVIEW TO SUPABASE
       // =========================
 
-      const { error } = await supabase
-        .from("reviews")
-        .insert({
-          name: form.name.trim(),
-          project_type: form.project_type,
-          review: form.review.trim(),
-          rating: form.rating,
-          profile_image_url,
-          approved: false,
-        });
+      const { data: reviewData, error: reviewError } =
+        await supabase
+          .from("reviews")
+          .insert({
+            name: form.name.trim(),
+            project_type: form.project_type,
+            review: form.review.trim(),
+            rating: Number(form.rating),
+            profile_image_url,
+            approved: false,
+          })
+          .select()
+          .single();
 
-      if (error) {
-        throw error;
+      if (reviewError) {
+        throw new Error(
+          `Review submission failed: ${reviewError.message}`
+        );
       }
 
       // =========================
@@ -204,31 +220,34 @@ function LeaveReview() {
             },
 
             body: JSON.stringify({
-              name: form.name.trim(),
-              project_type: form.project_type,
-              review: form.review.trim(),
-              rating: form.rating,
+              id: reviewData.id,
+              name: reviewData.name,
+              project_type: reviewData.project_type,
+              review: reviewData.review,
+              rating: reviewData.rating,
             }),
           }
         );
 
         if (!notificationResponse.ok) {
           console.error(
-            "Discord notification request failed:",
-            notificationResponse.status
+            "Discord notification could not be sent."
           );
         }
-
       } catch (notificationError) {
         console.error(
-          "Discord notification failed:",
+          "Discord notification error:",
           notificationError
         );
       }
 
       // =========================
-      // RESET FORM
+      // SUCCESS
       // =========================
+
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
 
       setForm({
         name: "",
@@ -246,12 +265,13 @@ function LeaveReview() {
         success: true,
       });
 
-    } catch (err) {
-      console.error("Review submission error:", err);
+    } catch (error) {
+      console.error("Review submission error:", error);
 
       setState({
         loading: false,
         error:
+          error.message ||
           "We could not submit your review right now. Please try again later.",
         success: false,
       });
@@ -259,23 +279,25 @@ function LeaveReview() {
   }
 
   return (
-    <main className="bg-brand-field min-h-screen">
+    <main className="min-h-screen bg-brand-field">
 
+      {/* ========================= */}
       {/* HEADER */}
+      {/* ========================= */}
 
       <Section className="pt-28 sm:pt-36">
 
         <div className="max-w-3xl">
 
-          <p className="text-cyan text-sm font-semibold tracking-[0.22em]">
+          <p className="text-sm font-semibold tracking-[0.22em] text-cyan">
             COMMUNITY FEEDBACK
           </p>
 
-          <h1 className="mt-5 text-4xl sm:text-6xl font-bold leading-tight">
+          <h1 className="mt-5 text-4xl font-bold leading-tight sm:text-6xl">
             SHARE YOUR EXPERIENCE
           </h1>
 
-          <p className="mt-6 text-lg text-ink-muted leading-8">
+          <p className="mt-6 text-lg leading-8 text-ink-muted">
             Your feedback can help other streamers, creators, and community
             owners understand what it is like to work with SHALOMHEGA NETWORKS.
           </p>
@@ -285,13 +307,15 @@ function LeaveReview() {
       </Section>
 
 
+      {/* ========================= */}
       {/* REVIEW FORM */}
+      {/* ========================= */}
 
       <Section className="pt-0">
 
         <form
           onSubmit={submit}
-          className="mx-auto max-w-3xl rounded-3xl border border-border bg-surface/90 p-6 sm:p-10 shadow-2xl shadow-purple/5"
+          className="mx-auto max-w-3xl rounded-3xl border border-border bg-surface/90 p-6 shadow-2xl shadow-purple/5 sm:p-10"
         >
 
           {/* SUCCESS MESSAGE */}
@@ -300,8 +324,14 @@ function LeaveReview() {
 
             <div className="mb-7 rounded-2xl border border-cyan/30 bg-cyan/10 p-5 text-sm leading-7">
 
-              Thank you for sharing your experience. Your review has been
-              submitted successfully and is now waiting for approval.
+              <p className="font-semibold">
+                Review submitted successfully! 🎉
+              </p>
+
+              <p className="mt-2">
+                Thank you for sharing your experience. Your review is now
+                waiting for approval before appearing publicly.
+              </p>
 
             </div>
 
@@ -312,9 +342,15 @@ function LeaveReview() {
 
           {state.error && (
 
-            <div className="mb-7 rounded-2xl border border-red-400/30 bg-red-400/10 p-4 text-sm">
+            <div className="mb-7 rounded-2xl border border-red-400/30 bg-red-400/10 p-5 text-sm leading-7">
 
-              {state.error}
+              <p className="font-semibold">
+                Review submission problem
+              </p>
+
+              <p className="mt-2">
+                {state.error}
+              </p>
 
             </div>
 
@@ -324,7 +360,9 @@ function LeaveReview() {
           <div className="grid gap-6">
 
 
+            {/* ========================= */}
             {/* NAME */}
+            {/* ========================= */}
 
             <label className="grid gap-2 text-sm font-medium">
 
@@ -332,7 +370,9 @@ function LeaveReview() {
 
               <input
                 value={form.name}
-                onChange={(e) => update("name", e.target.value)}
+                onChange={(event) =>
+                  update("name", event.target.value)
+                }
                 placeholder="Your name"
                 className="rounded-xl border border-border bg-background px-4 py-3.5 outline-none focus:border-cyan"
               />
@@ -340,7 +380,9 @@ function LeaveReview() {
             </label>
 
 
+            {/* ========================= */}
             {/* PROFILE IMAGE */}
+            {/* ========================= */}
 
             <div>
 
@@ -348,14 +390,14 @@ function LeaveReview() {
 
                 <span>PROFILE IMAGE</span>
 
-                <span className="text-ink-muted text-xs">
+                <span className="text-xs text-ink-muted">
                   OPTIONAL
                 </span>
 
               </div>
 
 
-              <label className="flex cursor-pointer items-center gap-4 rounded-2xl border border-dashed border-border bg-background/70 p-5 hover:border-cyan/60">
+              <label className="flex cursor-pointer items-center gap-4 rounded-2xl border border-dashed border-border bg-background/70 p-5 transition hover:border-cyan/60">
 
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-purple/20 text-xl">
 
@@ -363,7 +405,7 @@ function LeaveReview() {
 
                     <img
                       src={preview}
-                      alt="Preview"
+                      alt="Profile preview"
                       className="h-full w-full object-cover"
                     />
 
@@ -393,8 +435,8 @@ function LeaveReview() {
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
                   className="sr-only"
-                  onChange={(e) =>
-                    chooseImage(e.target.files?.[0])
+                  onChange={(event) =>
+                    chooseImage(event.target.files?.[0])
                   }
                 />
 
@@ -403,7 +445,9 @@ function LeaveReview() {
             </div>
 
 
+            {/* ========================= */}
             {/* PROJECT TYPE */}
+            {/* ========================= */}
 
             <label className="grid gap-2 text-sm font-medium">
 
@@ -411,8 +455,8 @@ function LeaveReview() {
 
               <select
                 value={form.project_type}
-                onChange={(e) =>
-                  update("project_type", e.target.value)
+                onChange={(event) =>
+                  update("project_type", event.target.value)
                 }
                 className="rounded-xl border border-border bg-background px-4 py-3.5 outline-none focus:border-cyan"
               >
@@ -421,10 +465,13 @@ function LeaveReview() {
                   Select your project type
                 </option>
 
-                {projectTypes.map((type) => (
+                {projectTypes.map((projectType) => (
 
-                  <option key={type} value={type}>
-                    {type}
+                  <option
+                    key={projectType}
+                    value={projectType}
+                  >
+                    {projectType}
                   </option>
 
                 ))}
@@ -434,14 +481,15 @@ function LeaveReview() {
             </label>
 
 
+            {/* ========================= */}
             {/* STAR RATING */}
+            {/* ========================= */}
 
             <div className="grid gap-2">
 
               <span className="text-sm font-medium">
                 YOUR RATING
               </span>
-
 
               <div className="flex gap-2">
 
@@ -468,7 +516,9 @@ function LeaveReview() {
             </div>
 
 
+            {/* ========================= */}
             {/* REVIEW */}
+            {/* ========================= */}
 
             <label className="grid gap-2 text-sm font-medium">
 
@@ -476,10 +526,10 @@ function LeaveReview() {
 
               <textarea
                 value={form.review}
-                onChange={(e) =>
+                onChange={(event) =>
                   update(
                     "review",
-                    e.target.value.slice(0, 1500)
+                    event.target.value.slice(0, 1500)
                   )
                 }
                 placeholder="Tell us about your experience working with SHALOMHEGA NETWORKS..."
@@ -496,21 +546,25 @@ function LeaveReview() {
           </div>
 
 
-          {/* REVIEW NOTICE */}
+          {/* ========================= */}
+          {/* APPROVAL NOTICE */}
+          {/* ========================= */}
 
           <p className="mt-7 text-sm leading-7 text-ink-muted">
 
-            Reviews are checked before appearing publicly. Your review will be
-            published after approval.
+            Reviews are checked before appearing publicly. Once approved,
+            your review will become visible on the reviews page.
 
           </p>
 
 
+          {/* ========================= */}
           {/* SUBMIT BUTTON */}
+          {/* ========================= */}
 
           <Button
             type="submit"
-            className="mt-7 w-full sm:w-auto px-8 py-4"
+            className="mt-7 w-full px-8 py-4 sm:w-auto"
             disabled={state.loading}
           >
 
