@@ -238,14 +238,14 @@ export const portfolioProjects = [
 ];
 
 // =========================
-// PORTFOLIO CATEGORIES
+// PORTFOLIO PROJECT CATEGORIES
 // =========================
 
 export const portfolioCategories = [
   "All Work",
-  "Template",
-  "Verification",
-  "Welcome System",
-  "Rules System",
-  "Roles System",
+  "Community Development",
+  "Server Design",
+  "Branding",
+  "Automation",
+  "Other Projects",
 ];
