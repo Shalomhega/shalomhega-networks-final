@@ -1,17 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Section from "../components/ui/Section.jsx";
-import {
-  portfolioCategories,
-  portfolioProjects,
-} from "../data/portfolio.js";
-import ProjectCard from "../components/media/ProjectCard.jsx";
-import MediaPlaceholder from "../components/media/MediaPlaceholder.jsx";
-import VideoModal from "../components/media/VideoModal.jsx";
-import {
-  supabase,
-  isSupabaseConfigured,
-} from "../lib/supabase.js";
+import { portfolioCategories } from "../data/portfolio.js";
+import { supabase, isSupabaseConfigured } from "../lib/supabase.js";
 
 const showcaseVideos = [
   // =========================
@@ -104,126 +95,126 @@ const videoCategories = [
   "Roles System",
 ];
 
-function OurWork() {
-  const [category, setCategory] = useState("All Work");
+// =========================
+// GET SUPABASE MEDIA URL
+// =========================
 
-  const [activeVideo, setActiveVideo] = useState(null);
+function getProjectMediaUrl(project) {
+  if (!project?.media_url) {
+    return "";
+  }
+
+  // If media_url is already a complete URL,
+  // use it directly.
+  if (
+    project.media_url.startsWith("http://") ||
+    project.media_url.startsWith("https://")
+  ) {
+    return project.media_url;
+  }
+
+  // If media_url is a Storage path,
+  // generate the public URL from Supabase.
+  if (supabase) {
+    const { data } = supabase.storage
+      .from("portfolio-media")
+      .getPublicUrl(project.media_url);
+
+    return data.publicUrl;
+  }
+
+  return project.media_url;
+}
+
+// =========================
+// CHECK MEDIA TYPE
+// =========================
+
+function getMediaType(project) {
+  if (project?.media_type) {
+    return project.media_type.toLowerCase();
+  }
+
+  const mediaUrl = project?.media_url?.toLowerCase() || "";
+
+  if (
+    mediaUrl.endsWith(".mp4") ||
+    mediaUrl.endsWith(".webm") ||
+    mediaUrl.endsWith(".mov")
+  ) {
+    return "video";
+  }
+
+  return "image";
+}
+
+function OurWork() {
+  // =========================
+  // VIDEO SHOWCASE STATES
+  // =========================
 
   const [selectedVideo, setSelectedVideo] = useState(null);
-
-  const [videoCategory, setVideoCategory] =
-    useState("All Videos");
+  const [videoCategory, setVideoCategory] = useState("All Videos");
 
   // =========================
-  // SUPABASE PROJECTS
+  // SUPABASE PROJECT STATES
   // =========================
 
-  const [supabaseProjects, setSupabaseProjects] = useState([]);
-
-  const [projectsLoading, setProjectsLoading] =
-    useState(true);
-
-  const [projectsError, setProjectsError] =
-    useState(null);
+  const [category, setCategory] = useState("All Work");
+  const [projects, setProjects] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [projectsError, setProjectsError] = useState(null);
 
   // =========================
-  // FETCH PROJECTS FROM SUPABASE
+  // LOAD SUPABASE PROJECTS
   // =========================
 
   useEffect(() => {
-    async function fetchProjects() {
-      // If Supabase is not configured,
-      // keep the website working normally.
+    async function loadProjects() {
+      // Prevent unnecessary loading
+      // if Supabase is not configured.
       if (!isSupabaseConfigured || !supabase) {
+        setProjects([]);
         setProjectsLoading(false);
+        setProjectsError(
+          "Supabase is not configured for the portfolio projects."
+        );
         return;
       }
 
-      setProjectsLoading(true);
-      setProjectsError(null);
+      try {
+        setProjectsLoading(true);
+        setProjectsError(null);
 
-      const { data, error } = await supabase
-        .from("portfolio_projects")
-        .select("*")
-        .eq("is_published", true)
-        .order("display_order", {
-          ascending: true,
-        })
-        .order("created_at", {
-          ascending: false,
-        });
+        const { data, error } = await supabase
+          .from("portfolio_projects")
+          .select("*")
+          .eq("is_published", true)
+          .order("display_order", {
+            ascending: true,
+          })
+          .order("created_at", {
+            ascending: false,
+          });
 
-      if (error) {
-        console.error(
-          "Error loading portfolio projects:",
-          error
-        );
+        if (error) {
+          throw error;
+        }
+
+        setProjects(data || []);
+      } catch (error) {
+        console.error("Error loading portfolio projects:", error);
 
         setProjectsError(
-          "Unable to load portfolio projects right now."
+          "We could not load the portfolio projects right now."
         );
-
+      } finally {
         setProjectsLoading(false);
-
-        return;
       }
-
-      // =========================
-      // CONVERT SUPABASE DATA
-      // INTO THE FORMAT USED BY
-      // PROJECTCARD
-      // =========================
-
-      const formattedProjects = (data || []).map(
-        (project) => {
-          const isVideo =
-            project.media_type === "video";
-
-          const isImage =
-            project.media_type === "image";
-
-          return {
-            id: `supabase-${project.id}`,
-
-            title:
-              project.title ||
-              "Untitled Project",
-
-            description:
-              project.description ||
-              "Explore this project from SHALOMHEGA NETWORKS.",
-
-            categories: project.category
-              ? [project.category]
-              : [],
-
-            imageUrl: isImage
-              ? project.media_url
-              : null,
-
-            videoUrl: isVideo
-              ? project.media_url
-              : null,
-
-            mediaType: project.media_type,
-
-            displayOrder:
-              project.display_order || 0,
-
-            createdAt:
-              project.created_at,
-          };
-        }
-      );
-
-      setSupabaseProjects(
-        formattedProjects
-      );
-
-      setProjectsLoading(false);
     }
 
-    fetchProjects();
+    loadProjects();
   }, []);
 
   // =========================
@@ -236,65 +227,33 @@ function OurWork() {
     }
 
     return showcaseVideos.filter(
-      (video) =>
-        video.category === videoCategory
+      (video) => video.category === videoCategory
     );
   }, [videoCategory]);
-
-  // =========================
-  // KEEP EXISTING VIDEO PROJECTS
-  // OUT OF THE PROJECT SHOWCASE
-  //
-  // THIS PREVENTS DUPLICATES WITH
-  // THE COMMUNITY SYSTEM SHOWCASE
-  // =========================
-
-  const nonVideoProjects = useMemo(() => {
-    return portfolioProjects.filter(
-      (project) => !project.videoUrl
-    );
-  }, []);
-
-  // =========================
-  // COMBINE:
-  //
-  // 1. EXISTING NON-VIDEO PROJECTS
-  // 2. NEW SUPABASE PROJECTS
-  // =========================
-
-  const allProjects = useMemo(() => {
-    return [
-      ...supabaseProjects,
-      ...nonVideoProjects,
-    ];
-  }, [
-    supabaseProjects,
-    nonVideoProjects,
-  ]);
 
   // =========================
   // PROJECT SHOWCASE FILTER
   // =========================
 
-  const filtered = useMemo(() => {
+  const filteredProjects = useMemo(() => {
     if (category === "All Work") {
-      return allProjects;
+      return projects;
     }
 
-    return allProjects.filter(
-      (project) =>
-        project.categories?.includes(category)
+    return projects.filter(
+      (project) => project.category === category
     );
-  }, [category, allProjects]);
+  }, [category, projects]);
 
   // =========================
-  // PROJECT COUNT
+  // PROJECT CATEGORIES
   // =========================
 
-  const projectCountText =
-    filtered.length === 1
-      ? "project"
-      : "projects";
+  const projectCategories = useMemo(() => {
+    return portfolioCategories.filter(
+      (item) => item !== "Video"
+    );
+  }, []);
 
   return (
     <main className="bg-brand-field">
@@ -304,7 +263,6 @@ function OurWork() {
       {/* ========================= */}
 
       <section className="relative overflow-hidden border-b border-border px-6 py-20 sm:py-28">
-
         <div className="mx-auto max-w-6xl">
 
           <p className="mb-5 text-xs font-semibold tracking-[0.24em] text-cyan">
@@ -320,9 +278,9 @@ function OurWork() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-7 text-ink-muted sm:text-lg">
-                Explore real community development, systems,
-                branding, and project experiences as they are
-                added to the SHALOMHEGA NETWORKS portfolio.
+                Explore real community development, systems, branding, and
+                project experiences as they are added to the SHALOMHEGA NETWORKS
+                portfolio.
               </p>
 
             </div>
@@ -334,9 +292,9 @@ function OurWork() {
               </p>
 
               <p className="mt-3 leading-7 text-ink-muted">
-                Explore real demonstrations of community systems.
-                Videos only play when you choose to watch them,
-                helping keep the experience smooth and organized.
+                Explore real demonstrations of community systems. Videos only
+                play when you choose to watch them, helping keep the experience
+                smooth and organized.
               </p>
 
             </div>
@@ -344,7 +302,6 @@ function OurWork() {
           </div>
 
         </div>
-
       </section>
 
 
@@ -354,494 +311,4 @@ function OurWork() {
 
       <Section className="px-6 py-16 sm:py-20">
 
-        <div className="mx-auto max-w-6xl">
-
-          <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-
-            <div>
-
-              <p className="text-xs font-semibold tracking-[0.22em] text-cyan">
-                COMMUNITY SYSTEM SHOWCASE
-              </p>
-
-              <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-                EXPLORE THE VIDEO WORK
-              </h2>
-
-            </div>
-
-            <p className="max-w-xl text-sm leading-6 text-ink-muted">
-              Explore real examples of community systems and
-              development work. Select any video to watch the
-              full experience.
-            </p>
-
-          </div>
-
-
-          {/* ========================= */}
-          {/* VIDEO FILTERS */}
-          {/* ========================= */}
-
-          <div className="mb-10 flex flex-wrap gap-2">
-
-            {videoCategories.map((item) => (
-
-              <button
-                key={item}
-                onClick={() =>
-                  setVideoCategory(item)
-                }
-                className={`rounded-full border px-4 py-2 text-sm transition ${
-                  videoCategory === item
-                    ? "border-cyan bg-cyan/10 text-cyan"
-                    : "border-border text-ink-muted hover:border-purple/50 hover:text-ink"
-                }`}
-              >
-                {item}
-              </button>
-
-            ))}
-
-          </div>
-
-
-          {/* ========================= */}
-          {/* VIDEO COUNT */}
-          {/* ========================= */}
-
-          <p className="mb-6 text-sm text-ink-muted">
-
-            Showing{" "}
-
-            <span className="font-semibold text-cyan">
-              {filteredVideos.length}
-            </span>{" "}
-
-            {filteredVideos.length === 1
-              ? "video"
-              : "videos"}
-
-          </p>
-
-
-          {/* ========================= */}
-          {/* VIDEO CARDS */}
-          {/* ========================= */}
-
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-
-            {filteredVideos.map((video) => (
-
-              <button
-                key={video.id}
-                onClick={() =>
-                  setSelectedVideo(video)
-                }
-                className="group overflow-hidden rounded-2xl border border-border bg-surface text-left transition hover:-translate-y-1 hover:border-purple/60"
-              >
-
-                {/* VIDEO PREVIEW */}
-
-                <div className="relative aspect-video overflow-hidden bg-black">
-
-                  <video
-                    src={video.video}
-                    muted
-                    preload="metadata"
-                    className="h-full w-full object-cover opacity-70 transition duration-300 group-hover:scale-105 group-hover:opacity-90"
-                  />
-
-                  <div className="absolute inset-0 bg-black/20" />
-
-                  <div className="absolute left-4 top-4 rounded-full border border-cyan/50 bg-brand-field/80 px-3 py-1 text-xs font-semibold tracking-[0.15em] text-cyan backdrop-blur">
-                    VIDEO DEMO
-                  </div>
-
-
-                  {/* PLAY BUTTON */}
-
-                  <div className="absolute inset-0 flex items-center justify-center">
-
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/30 bg-black/50 text-2xl text-cyan backdrop-blur transition group-hover:scale-110 group-hover:border-cyan">
-                      ▶
-                    </div>
-
-                  </div>
-
-                </div>
-
-
-                {/* VIDEO INFORMATION */}
-
-                <div className="p-6">
-
-                  <div className="flex items-center justify-between gap-4">
-
-                    <p className="text-xs font-semibold tracking-[0.22em] text-cyan">
-                      {video.number}
-                    </p>
-
-                    <span className="text-xs font-semibold tracking-[0.14em] text-purple">
-                      {video.category.toUpperCase()}
-                    </span>
-
-                  </div>
-
-                  <h3 className="mt-4 text-2xl font-semibold">
-                    {video.title}
-                  </h3>
-
-                  <p className="mt-3 text-sm leading-6 text-ink-muted">
-                    {video.description}
-                  </p>
-
-                </div>
-
-              </button>
-
-            ))}
-
-          </div>
-
-        </div>
-
-      </Section>
-
-
-      {/* ========================= */}
-      {/* PROJECT SHOWCASE */}
-      {/* ========================= */}
-
-      <Section className="border-t border-border px-6 py-16 sm:py-20">
-
-        <div className="mx-auto max-w-6xl">
-
-          <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-
-            <div>
-
-              <p className="text-xs font-semibold tracking-[0.22em] text-cyan">
-                PROJECT SHOWCASE
-              </p>
-
-              <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-                EXPLORE THE PORTFOLIO
-              </h2>
-
-            </div>
-
-            <p className="max-w-xl text-sm leading-6 text-ink-muted">
-              New projects added through our portfolio management
-              system will automatically appear here.
-            </p>
-
-          </div>
-
-
-          {/* ========================= */}
-          {/* PROJECT FILTERS */}
-          {/* ========================= */}
-
-          <div className="mb-10 flex flex-wrap gap-2">
-
-            {portfolioCategories.map((item) => (
-
-              <button
-                key={item}
-                onClick={() =>
-                  setCategory(item)
-                }
-                className={`rounded-full border px-4 py-2 text-sm transition ${
-                  category === item
-                    ? "border-cyan bg-cyan/10 text-cyan"
-                    : "border-border text-ink-muted hover:border-purple/50 hover:text-ink"
-                }`}
-              >
-                {item}
-              </button>
-
-            ))}
-
-          </div>
-
-
-          {/* ========================= */}
-          {/* PROJECT STATUS */}
-          {/* ========================= */}
-
-          {projectsLoading && (
-
-            <p className="mb-6 text-sm text-ink-muted">
-              Loading portfolio projects...
-            </p>
-
-          )}
-
-          {!projectsLoading &&
-            projectsError && (
-
-              <p className="mb-6 text-sm text-red-400">
-                {projectsError}
-              </p>
-
-            )}
-
-          {!projectsLoading &&
-            !projectsError && (
-
-              <p className="mb-6 text-sm text-ink-muted">
-
-                Showing{" "}
-
-                <span className="font-semibold text-cyan">
-                  {filtered.length}
-                </span>{" "}
-
-                {projectCountText}
-
-              </p>
-
-            )}
-
-
-          {/* ========================= */}
-          {/* PROJECT CONTENT */}
-          {/* ========================= */}
-
-          {!projectsLoading &&
-            filtered.length > 0 && (
-
-              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-
-                {filtered.map((project) => (
-
-                  <ProjectCard
-                    key={project.id}
-                    project={project}
-                    onWatch={setActiveVideo}
-                  />
-
-                ))}
-
-              </div>
-
-            )}
-
-
-          {/* ========================= */}
-          {/* EMPTY STATE */}
-          {/* ========================= */}
-
-          {!projectsLoading &&
-            filtered.length === 0 && (
-
-              <div className="rounded-3xl border border-border bg-surface/60 p-6 sm:p-10">
-
-                <div className="grid gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
-
-                  <MediaPlaceholder
-                    label="REAL PROJECT MEDIA WILL APPEAR HERE"
-                    className="min-h-[280px]"
-                  />
-
-                  <div>
-
-                    <p className="text-xs font-semibold tracking-[0.2em] text-purple">
-                      PORTFOLIO IN PROGRESS
-                    </p>
-
-                    <h3 className="mt-3 text-2xl font-semibold sm:text-3xl">
-                      REAL WORK DESERVES A REAL SHOWCASE
-                    </h3>
-
-                    <p className="mt-4 max-w-xl leading-7 text-ink-muted">
-                      New projects, branding, community development
-                      work, images, and videos will automatically
-                      appear here as they are added and published
-                      through the portfolio system.
-                    </p>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            )}
-
-        </div>
-
-      </Section>
-
-
-      {/* ========================= */}
-      {/* HOW TO EXPLORE */}
-      {/* ========================= */}
-
-      <Section className="border-t border-border px-6 py-16 sm:py-20">
-
-        <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
-
-          {[
-            [
-              "01",
-              "WATCH REAL SYSTEMS",
-              "Explore demonstrations of real community systems and development work.",
-            ],
-            [
-              "02",
-              "PLAY WHEN READY",
-              "Videos are not forced to autoplay. Visitors choose what they want to watch.",
-            ],
-            [
-              "03",
-              "MORE WORK COMING",
-              "Additional community systems and project experiences will continue to be added.",
-            ],
-          ].map(([number, title, text]) => (
-
-            <div
-              key={number}
-              className="rounded-2xl border border-border bg-surface/60 p-6"
-            >
-
-              <span className="text-xs font-semibold tracking-[0.2em] text-cyan">
-                {number}
-              </span>
-
-              <h3 className="mt-4 text-xl font-semibold">
-                {title}
-              </h3>
-
-              <p className="mt-3 text-sm leading-6 text-ink-muted">
-                {text}
-              </p>
-
-            </div>
-
-          ))}
-
-        </div>
-
-      </Section>
-
-
-      {/* ========================= */}
-      {/* CTA */}
-      {/* ========================= */}
-
-      <section className="border-t border-border px-6 py-20 text-center">
-
-        <div className="mx-auto max-w-2xl">
-
-          <p className="text-xs font-semibold tracking-[0.22em] text-cyan">
-            HAVE A PROJECT IN MIND
-          </p>
-
-          <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">
-            LET'S TALK ABOUT WHAT YOU WANT TO BUILD
-          </h2>
-
-          <p className="mt-5 leading-7 text-ink-muted">
-            Start with your direction, and we can explore the
-            right development approach for your community.
-          </p>
-
-          <Link
-            to="/start-your-project"
-            className="mt-8 inline-flex rounded-full bg-purple px-6 py-3 text-sm font-semibold text-ink transition hover:bg-blue"
-          >
-            START YOUR PROJECT
-          </Link>
-
-        </div>
-
-      </section>
-
-
-      {/* ========================= */}
-      {/* EXISTING VIDEO PLAYER */}
-      {/* ========================= */}
-
-      {selectedVideo && (
-
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-          onClick={() =>
-            setSelectedVideo(null)
-          }
-        >
-
-          <div
-            className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-border bg-surface p-4"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
-
-            <button
-              onClick={() =>
-                setSelectedVideo(null)
-              }
-              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
-              aria-label="Close video"
-            >
-              ×
-            </button>
-
-
-            <div className="mb-4 pr-12">
-
-              <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
-                {selectedVideo.category.toUpperCase()}
-              </p>
-
-              <h2 className="mt-2 text-2xl font-semibold">
-                {selectedVideo.title} —{" "}
-                {selectedVideo.number}
-              </h2>
-
-            </div>
-
-
-            <video
-              key={selectedVideo.video}
-              controls
-              autoPlay
-              playsInline
-              className="w-full rounded-xl bg-black"
-            >
-
-              <source
-                src={selectedVideo.video}
-                type="video/mp4"
-              />
-
-              Your browser does not support the video tag.
-
-            </video>
-
-          </div>
-
-        </div>
-
-      )}
-
-
-      {/* ========================= */}
-      {/* PROJECT VIDEO MODAL */}
-      {/* ========================= */}
-
-      <VideoModal
-        project={activeVideo}
-        onClose={() =>
-          setActiveVideo(null)
-        }
-      />
-
-    </main>
-  );
-}
-
-export default OurWork;
+        <div className="
