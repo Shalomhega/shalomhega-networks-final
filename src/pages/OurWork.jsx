@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Section from "../components/ui/Section.jsx";
 import {
@@ -8,6 +8,10 @@ import {
 import ProjectCard from "../components/media/ProjectCard.jsx";
 import MediaPlaceholder from "../components/media/MediaPlaceholder.jsx";
 import VideoModal from "../components/media/VideoModal.jsx";
+import {
+  supabase,
+  isSupabaseConfigured,
+} from "../lib/supabase.js";
 
 const showcaseVideos = [
   // =========================
@@ -102,43 +106,195 @@ const videoCategories = [
 
 function OurWork() {
   const [category, setCategory] = useState("All Work");
+
   const [activeVideo, setActiveVideo] = useState(null);
+
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [videoCategory, setVideoCategory] = useState("All Videos");
+
+  const [videoCategory, setVideoCategory] =
+    useState("All Videos");
+
+  // =========================
+  // SUPABASE PROJECTS
+  // =========================
+
+  const [supabaseProjects, setSupabaseProjects] = useState([]);
+
+  const [projectsLoading, setProjectsLoading] =
+    useState(true);
+
+  const [projectsError, setProjectsError] =
+    useState(null);
+
+  // =========================
+  // FETCH PROJECTS FROM SUPABASE
+  // =========================
+
+  useEffect(() => {
+    async function fetchProjects() {
+      // If Supabase is not configured,
+      // keep the website working normally.
+      if (!isSupabaseConfigured || !supabase) {
+        setProjectsLoading(false);
+        return;
+      }
+
+      setProjectsLoading(true);
+      setProjectsError(null);
+
+      const { data, error } = await supabase
+        .from("portfolio_projects")
+        .select("*")
+        .eq("is_published", true)
+        .order("display_order", {
+          ascending: true,
+        })
+        .order("created_at", {
+          ascending: false,
+        });
+
+      if (error) {
+        console.error(
+          "Error loading portfolio projects:",
+          error
+        );
+
+        setProjectsError(
+          "Unable to load portfolio projects right now."
+        );
+
+        setProjectsLoading(false);
+
+        return;
+      }
+
+      // =========================
+      // CONVERT SUPABASE DATA
+      // INTO THE FORMAT USED BY
+      // PROJECTCARD
+      // =========================
+
+      const formattedProjects = (data || []).map(
+        (project) => {
+          const isVideo =
+            project.media_type === "video";
+
+          const isImage =
+            project.media_type === "image";
+
+          return {
+            id: `supabase-${project.id}`,
+
+            title:
+              project.title ||
+              "Untitled Project",
+
+            description:
+              project.description ||
+              "Explore this project from SHALOMHEGA NETWORKS.",
+
+            categories: project.category
+              ? [project.category]
+              : [],
+
+            imageUrl: isImage
+              ? project.media_url
+              : null,
+
+            videoUrl: isVideo
+              ? project.media_url
+              : null,
+
+            mediaType: project.media_type,
+
+            displayOrder:
+              project.display_order || 0,
+
+            createdAt:
+              project.created_at,
+          };
+        }
+      );
+
+      setSupabaseProjects(
+        formattedProjects
+      );
+
+      setProjectsLoading(false);
+    }
+
+    fetchProjects();
+  }, []);
 
   // =========================
   // VIDEO SHOWCASE FILTER
   // =========================
+
   const filteredVideos = useMemo(() => {
     if (videoCategory === "All Videos") {
       return showcaseVideos;
     }
 
     return showcaseVideos.filter(
-      (video) => video.category === videoCategory
+      (video) =>
+        video.category === videoCategory
     );
   }, [videoCategory]);
 
   // =========================
-  // REMOVE VIDEO PROJECTS
-  // TO PREVENT DUPLICATES
+  // KEEP EXISTING VIDEO PROJECTS
+  // OUT OF THE PROJECT SHOWCASE
+  //
+  // THIS PREVENTS DUPLICATES WITH
+  // THE COMMUNITY SYSTEM SHOWCASE
   // =========================
+
   const nonVideoProjects = useMemo(() => {
-    return portfolioProjects.filter((project) => !project.videoUrl);
+    return portfolioProjects.filter(
+      (project) => !project.videoUrl
+    );
   }, []);
+
+  // =========================
+  // COMBINE:
+  //
+  // 1. EXISTING NON-VIDEO PROJECTS
+  // 2. NEW SUPABASE PROJECTS
+  // =========================
+
+  const allProjects = useMemo(() => {
+    return [
+      ...supabaseProjects,
+      ...nonVideoProjects,
+    ];
+  }, [
+    supabaseProjects,
+    nonVideoProjects,
+  ]);
 
   // =========================
   // PROJECT SHOWCASE FILTER
   // =========================
+
   const filtered = useMemo(() => {
     if (category === "All Work") {
-      return nonVideoProjects;
+      return allProjects;
     }
 
-    return nonVideoProjects.filter((project) =>
-      project.categories?.includes(category)
+    return allProjects.filter(
+      (project) =>
+        project.categories?.includes(category)
     );
-  }, [category, nonVideoProjects]);
+  }, [category, allProjects]);
+
+  // =========================
+  // PROJECT COUNT
+  // =========================
+
+  const projectCountText =
+    filtered.length === 1
+      ? "project"
+      : "projects";
 
   return (
     <main className="bg-brand-field">
@@ -148,6 +304,7 @@ function OurWork() {
       {/* ========================= */}
 
       <section className="relative overflow-hidden border-b border-border px-6 py-20 sm:py-28">
+
         <div className="mx-auto max-w-6xl">
 
           <p className="mb-5 text-xs font-semibold tracking-[0.24em] text-cyan">
@@ -157,15 +314,17 @@ function OurWork() {
           <div className="grid gap-12 lg:grid-cols-[1.1fr_.9fr] lg:items-end">
 
             <div>
+
               <h1 className="max-w-3xl text-4xl font-semibold leading-tight sm:text-6xl">
                 THE WORK BEHIND THE COMMUNITY
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-7 text-ink-muted sm:text-lg">
-                Explore real community development, systems, branding, and
-                project experiences as they are added to the SHALOMHEGA NETWORKS
-                portfolio.
+                Explore real community development, systems,
+                branding, and project experiences as they are
+                added to the SHALOMHEGA NETWORKS portfolio.
               </p>
+
             </div>
 
             <div className="rounded-2xl border border-border bg-surface/70 p-6">
@@ -175,9 +334,9 @@ function OurWork() {
               </p>
 
               <p className="mt-3 leading-7 text-ink-muted">
-                Explore real demonstrations of community systems. Videos only
-                play when you choose to watch them, helping keep the experience
-                smooth and organized.
+                Explore real demonstrations of community systems.
+                Videos only play when you choose to watch them,
+                helping keep the experience smooth and organized.
               </p>
 
             </div>
@@ -185,6 +344,7 @@ function OurWork() {
           </div>
 
         </div>
+
       </section>
 
 
@@ -211,14 +371,17 @@ function OurWork() {
             </div>
 
             <p className="max-w-xl text-sm leading-6 text-ink-muted">
-              Explore real examples of community systems and development work.
-              Select any video to watch the full experience.
+              Explore real examples of community systems and
+              development work. Select any video to watch the
+              full experience.
             </p>
 
           </div>
 
 
+          {/* ========================= */}
           {/* VIDEO FILTERS */}
+          {/* ========================= */}
 
           <div className="mb-10 flex flex-wrap gap-2">
 
@@ -226,7 +389,9 @@ function OurWork() {
 
               <button
                 key={item}
-                onClick={() => setVideoCategory(item)}
+                onClick={() =>
+                  setVideoCategory(item)
+                }
                 className={`rounded-full border px-4 py-2 text-sm transition ${
                   videoCategory === item
                     ? "border-cyan bg-cyan/10 text-cyan"
@@ -241,18 +406,28 @@ function OurWork() {
           </div>
 
 
+          {/* ========================= */}
           {/* VIDEO COUNT */}
+          {/* ========================= */}
 
           <p className="mb-6 text-sm text-ink-muted">
+
             Showing{" "}
+
             <span className="font-semibold text-cyan">
               {filteredVideos.length}
             </span>{" "}
-            {filteredVideos.length === 1 ? "video" : "videos"}
+
+            {filteredVideos.length === 1
+              ? "video"
+              : "videos"}
+
           </p>
 
 
+          {/* ========================= */}
           {/* VIDEO CARDS */}
+          {/* ========================= */}
 
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
@@ -260,7 +435,9 @@ function OurWork() {
 
               <button
                 key={video.id}
-                onClick={() => setSelectedVideo(video)}
+                onClick={() =>
+                  setSelectedVideo(video)
+                }
                 className="group overflow-hidden rounded-2xl border border-border bg-surface text-left transition hover:-translate-y-1 hover:border-purple/60"
               >
 
@@ -280,6 +457,7 @@ function OurWork() {
                   <div className="absolute left-4 top-4 rounded-full border border-cyan/50 bg-brand-field/80 px-3 py-1 text-xs font-semibold tracking-[0.15em] text-cyan backdrop-blur">
                     VIDEO DEMO
                   </div>
+
 
                   {/* PLAY BUTTON */}
 
@@ -354,14 +532,16 @@ function OurWork() {
             </div>
 
             <p className="max-w-xl text-sm leading-6 text-ink-muted">
-              Additional project screenshots, branding, community development,
-              and real project media will appear here as more work is published.
+              New projects added through our portfolio management
+              system will automatically appear here.
             </p>
 
           </div>
 
 
+          {/* ========================= */}
           {/* PROJECT FILTERS */}
+          {/* ========================= */}
 
           <div className="mb-10 flex flex-wrap gap-2">
 
@@ -369,7 +549,9 @@ function OurWork() {
 
               <button
                 key={item}
-                onClick={() => setCategory(item)}
+                onClick={() =>
+                  setCategory(item)
+                }
                 className={`rounded-full border px-4 py-2 text-sm transition ${
                   category === item
                     ? "border-cyan bg-cyan/10 text-cyan"
@@ -384,59 +566,109 @@ function OurWork() {
           </div>
 
 
+          {/* ========================= */}
+          {/* PROJECT STATUS */}
+          {/* ========================= */}
+
+          {projectsLoading && (
+
+            <p className="mb-6 text-sm text-ink-muted">
+              Loading portfolio projects...
+            </p>
+
+          )}
+
+          {!projectsLoading &&
+            projectsError && (
+
+              <p className="mb-6 text-sm text-red-400">
+                {projectsError}
+              </p>
+
+            )}
+
+          {!projectsLoading &&
+            !projectsError && (
+
+              <p className="mb-6 text-sm text-ink-muted">
+
+                Showing{" "}
+
+                <span className="font-semibold text-cyan">
+                  {filtered.length}
+                </span>{" "}
+
+                {projectCountText}
+
+              </p>
+
+            )}
+
+
+          {/* ========================= */}
           {/* PROJECT CONTENT */}
+          {/* ========================= */}
 
-          {filtered.length ? (
+          {!projectsLoading &&
+            filtered.length > 0 && (
 
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
-              {filtered.map((project) => (
+                {filtered.map((project) => (
 
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  onWatch={setActiveVideo}
-                />
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    onWatch={setActiveVideo}
+                  />
 
-              ))}
+                ))}
 
-            </div>
+              </div>
 
-          ) : (
+            )}
 
-            <div className="rounded-3xl border border-border bg-surface/60 p-6 sm:p-10">
 
-              <div className="grid gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
+          {/* ========================= */}
+          {/* EMPTY STATE */}
+          {/* ========================= */}
 
-                <MediaPlaceholder
-                  label="REAL PROJECT MEDIA WILL APPEAR HERE"
-                  className="min-h-[280px]"
-                />
+          {!projectsLoading &&
+            filtered.length === 0 && (
 
-                <div>
+              <div className="rounded-3xl border border-border bg-surface/60 p-6 sm:p-10">
 
-                  <p className="text-xs font-semibold tracking-[0.2em] text-purple">
-                    PORTFOLIO IN PROGRESS
-                  </p>
+                <div className="grid gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
 
-                  <h3 className="mt-3 text-2xl font-semibold sm:text-3xl">
-                    REAL WORK DESERVES A REAL SHOWCASE
-                  </h3>
+                  <MediaPlaceholder
+                    label="REAL PROJECT MEDIA WILL APPEAR HERE"
+                    className="min-h-[280px]"
+                  />
 
-                  <p className="mt-4 max-w-xl leading-7 text-ink-muted">
-                    The video demonstrations are now available in the Community
-                    System Showcase above. Additional project screenshots,
-                    branding, community development work, and real client
-                    projects will continue to be added here.
-                  </p>
+                  <div>
+
+                    <p className="text-xs font-semibold tracking-[0.2em] text-purple">
+                      PORTFOLIO IN PROGRESS
+                    </p>
+
+                    <h3 className="mt-3 text-2xl font-semibold sm:text-3xl">
+                      REAL WORK DESERVES A REAL SHOWCASE
+                    </h3>
+
+                    <p className="mt-4 max-w-xl leading-7 text-ink-muted">
+                      New projects, branding, community development
+                      work, images, and videos will automatically
+                      appear here as they are added and published
+                      through the portfolio system.
+                    </p>
+
+                  </div>
 
                 </div>
 
               </div>
 
-            </div>
-
-          )}
+            )}
 
         </div>
 
@@ -512,8 +744,8 @@ function OurWork() {
           </h2>
 
           <p className="mt-5 leading-7 text-ink-muted">
-            Start with your direction, and we can explore the right development
-            approach for your community.
+            Start with your direction, and we can explore the
+            right development approach for your community.
           </p>
 
           <Link
@@ -529,23 +761,29 @@ function OurWork() {
 
 
       {/* ========================= */}
-      {/* VIDEO PLAYER MODAL */}
+      {/* EXISTING VIDEO PLAYER */}
       {/* ========================= */}
 
       {selectedVideo && (
 
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-          onClick={() => setSelectedVideo(null)}
+          onClick={() =>
+            setSelectedVideo(null)
+          }
         >
 
           <div
             className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-border bg-surface p-4"
-            onClick={(event) => event.stopPropagation()}
+            onClick={(event) =>
+              event.stopPropagation()
+            }
           >
 
             <button
-              onClick={() => setSelectedVideo(null)}
+              onClick={() =>
+                setSelectedVideo(null)
+              }
               className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
               aria-label="Close video"
             >
@@ -560,7 +798,8 @@ function OurWork() {
               </p>
 
               <h2 className="mt-2 text-2xl font-semibold">
-                {selectedVideo.title} — {selectedVideo.number}
+                {selectedVideo.title} —{" "}
+                {selectedVideo.number}
               </h2>
 
             </div>
@@ -573,6 +812,7 @@ function OurWork() {
               playsInline
               className="w-full rounded-xl bg-black"
             >
+
               <source
                 src={selectedVideo.video}
                 type="video/mp4"
@@ -589,11 +829,15 @@ function OurWork() {
       )}
 
 
-      {/* EXISTING VIDEO MODAL */}
+      {/* ========================= */}
+      {/* PROJECT VIDEO MODAL */}
+      {/* ========================= */}
 
       <VideoModal
         project={activeVideo}
-        onClose={() => setActiveVideo(null)}
+        onClose={() =>
+          setActiveVideo(null)
+        }
       />
 
     </main>
