@@ -43,14 +43,14 @@ const showcaseVideos = [
   }),
 
   // =========================
-  // WELCOME VIDEOS
+  // WELCOME SYSTEM VIDEOS
   // =========================
   ...Array.from({ length: 8 }, (_, index) => {
     const number = String(index + 1).padStart(2, "0");
 
     return {
       id: `welcome-${number}`,
-      category: "Welcome",
+      category: "Welcome System",
       number: `DEMO ${number}`,
       title: "Welcome System",
       description: "Click to watch this community welcome system demonstration.",
@@ -59,14 +59,14 @@ const showcaseVideos = [
   }),
 
   // =========================
-  // RULES VIDEOS
+  // RULES SYSTEM VIDEOS
   // =========================
   ...Array.from({ length: 7 }, (_, index) => {
     const number = String(index + 1).padStart(2, "0");
 
     return {
       id: `rules-${number}`,
-      category: "Rules",
+      category: "Rules System",
       number: `DEMO ${number}`,
       title: "Rules System",
       description: "Click to watch this community rules system demonstration.",
@@ -75,14 +75,14 @@ const showcaseVideos = [
   }),
 
   // =========================
-  // ROLES VIDEOS
+  // ROLES SYSTEM VIDEOS
   // =========================
   ...Array.from({ length: 3 }, (_, index) => {
     const number = String(index + 1).padStart(2, "0");
 
     return {
       id: `roles-${number}`,
-      category: "Roles",
+      category: "Roles System",
       number: `DEMO ${number}`,
       title: "Roles System",
       description: "Click to watch this community roles system demonstration.",
@@ -95,9 +95,9 @@ const videoCategories = [
   "All Videos",
   "Template",
   "Verification",
-  "Welcome",
-  "Rules",
-  "Roles",
+  "Welcome System",
+  "Rules System",
+  "Roles System",
 ];
 
 function OurWork() {
@@ -120,8 +120,8 @@ function OurWork() {
   }, [videoCategory]);
 
   // =========================
-  // REMOVE VIDEOS FROM PROJECT
-  // SHOWCASE TO PREVENT DUPLICATES
+  // REMOVE VIDEO PROJECTS
+  // TO PREVENT DUPLICATES
   // =========================
   const nonVideoProjects = useMemo(() => {
     return portfolioProjects.filter((project) => !project.videoUrl);
@@ -218,9 +218,7 @@ function OurWork() {
           </div>
 
 
-          {/* ========================= */}
           {/* VIDEO FILTERS */}
-          {/* ========================= */}
 
           <div className="mb-10 flex flex-wrap gap-2">
 
@@ -243,9 +241,7 @@ function OurWork() {
           </div>
 
 
-          {/* ========================= */}
           {/* VIDEO COUNT */}
-          {/* ========================= */}
 
           <p className="mb-6 text-sm text-ink-muted">
             Showing{" "}
@@ -256,9 +252,7 @@ function OurWork() {
           </p>
 
 
-          {/* ========================= */}
           {/* VIDEO CARDS */}
-          {/* ========================= */}
 
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
@@ -282,8 +276,6 @@ function OurWork() {
                   />
 
                   <div className="absolute inset-0 bg-black/20" />
-
-                  {/* VIDEO LABEL */}
 
                   <div className="absolute left-4 top-4 rounded-full border border-cyan/50 bg-brand-field/80 px-3 py-1 text-xs font-semibold tracking-[0.15em] text-cyan backdrop-blur">
                     VIDEO DEMO
@@ -373,23 +365,21 @@ function OurWork() {
 
           <div className="mb-10 flex flex-wrap gap-2">
 
-            {portfolioCategories
-              .filter((item) => item !== "Video")
-              .map((item) => (
+            {portfolioCategories.map((item) => (
 
-                <button
-                  key={item}
-                  onClick={() => setCategory(item)}
-                  className={`rounded-full border px-4 py-2 text-sm transition ${
-                    category === item
-                      ? "border-cyan bg-cyan/10 text-cyan"
-                      : "border-border text-ink-muted hover:border-purple/50 hover:text-ink"
-                  }`}
-                >
-                  {item}
-                </button>
+              <button
+                key={item}
+                onClick={() => setCategory(item)}
+                className={`rounded-full border px-4 py-2 text-sm transition ${
+                  category === item
+                    ? "border-cyan bg-cyan/10 text-cyan"
+                    : "border-border text-ink-muted hover:border-purple/50 hover:text-ink"
+                }`}
+              >
+                {item}
+              </button>
 
-              ))}
+            ))}
 
           </div>
 
