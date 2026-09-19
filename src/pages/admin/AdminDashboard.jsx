@@ -6,7 +6,7 @@ import {
 } from "../../lib/supabase.js";
 import Button from "../../components/ui/Button.jsx";
 
-const reviewStatuses = ["pending", "approved", "rejected"];
+const reviewStatuses = ["pending", "approved"];
 
 const inquiryStatuses = [
   "new",
@@ -180,15 +180,15 @@ function AdminDashboard() {
   }, []);
 
   const reviewCounts = useMemo(
-    () =>
-      Object.fromEntries(
-        reviewStatuses.map((status) => [
-          status,
-          reviews.filter(
-            (review) => review.status === status
-          ).length,
-        ])
-      ),
+    () => ({
+      pending: reviews.filter(
+        (review) => review.approved !== true
+      ).length,
+
+      approved: reviews.filter(
+        (review) => review.approved === true
+      ).length,
+    }),
     [reviews]
   );
 
@@ -239,17 +239,19 @@ function AdminDashboard() {
     () =>
       [
         ...reviews.map((review) => ({
-          time:
-            review.updated_at ||
-            review.created_at,
+          time: review.created_at,
           title:
-            review.status === "pending"
-              ? "New review submitted"
-              : `Review ${review.status}`,
+            review.approved === true
+              ? "Review approved"
+              : "New review submitted",
           detail: review.name,
           go: () => {
             setTab("reviews");
-            setFilter(review.status);
+            setFilter(
+              review.approved === true
+                ? "approved"
+                : "pending"
+            );
           },
         })),
 
@@ -280,35 +282,51 @@ function AdminDashboard() {
   );
 
   async function reviewStatus(id, status) {
-    const now = new Date().toISOString();
+    if (status === "approved") {
+      const { error } = await supabase
+        .from("reviews")
+        .update({
+          approved: true,
+        })
+        .eq("id", id);
 
-    const patch = {
-      status,
-      updated_at: now,
-      approved_at:
-        status === "approved" ? now : null,
-    };
+      setMessage(
+        error
+          ? `Review could not be approved: ${error.message}`
+          : "Review approved successfully."
+      );
 
-    const { error } = await supabase
-      .from("reviews")
-      .update(patch)
-      .eq("id", id);
+      if (!error) {
+        await load();
+      }
 
-    setMessage(
-      error
-        ? "Action could not be completed."
-        : "Review updated successfully."
-    );
+      return;
+    }
 
-    if (!error) {
-      await load();
+    if (status === "pending") {
+      const { error } = await supabase
+        .from("reviews")
+        .update({
+          approved: false,
+        })
+        .eq("id", id);
+
+      setMessage(
+        error
+          ? `Review could not be unpublished: ${error.message}`
+          : "Review unpublished successfully."
+      );
+
+      if (!error) {
+        await load();
+      }
     }
   }
 
   async function deleteReview(id) {
     if (
       !confirm(
-        "Delete this review permanently? This cannot be undone."
+        "Reject and delete this review permanently? This cannot be undone."
       )
     ) {
       return;
@@ -321,8 +339,8 @@ function AdminDashboard() {
 
     setMessage(
       error
-        ? "Review could not be deleted."
-        : "Review deleted successfully."
+        ? `Review could not be rejected: ${error.message}`
+        : "Review rejected and deleted successfully."
     );
 
     if (!error) {
@@ -411,9 +429,9 @@ function AdminDashboard() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() =>
-                setTab("notifications")
-              }
+              onClick={() => {
+                setTab("notifications");
+              }}
               className="relative rounded-xl border border-border px-4 py-2 text-sm"
             >
               NOTIFICATIONS
@@ -438,7 +456,17 @@ function AdminDashboard() {
           {navs.map(([id, text]) => (
             <button
               key={id}
-              onClick={() => setTab(id)}
+              onClick={() => {
+                setTab(id);
+
+                if (id === "reviews") {
+                  setFilter("pending");
+                }
+
+                if (id === "inquiries") {
+                  setFilter("new");
+                }
+              }}
               className={`whitespace-nowrap rounded-full px-4 py-2 text-sm ${
                 tab === id
                   ? "bg-purple text-ink"
@@ -595,14 +623,18 @@ function Overview({
 
       <section className="grid gap-4 sm:grid-cols-2">
         <button
-          onClick={() => setTab("reviews")}
+          onClick={() => {
+            setTab("reviews");
+          }}
           className="rounded-2xl border border-border bg-surface p-6 text-left font-semibold"
         >
           MANAGE REVIEWS
         </button>
 
         <button
-          onClick={() => setTab("inquiries")}
+          onClick={() => {
+            setTab("inquiries");
+            }}
           className="rounded-2xl border border-border bg-surface p-6 text-left font-semibold"
         >
           VIEW PROJECT INQUIRIES
@@ -1170,11 +1202,13 @@ function Reviews({
   remove,
 }) {
   const visible =
-    filter &&
-    reviewStatuses.includes(filter)
+    filter === "pending"
       ? reviews.filter(
-          (review) =>
-            review.status === filter
+          (review) => review.approved !== true
+        )
+      : filter === "approved"
+      ? reviews.filter(
+          (review) => review.approved === true
         )
       : reviews;
 
@@ -1237,9 +1271,23 @@ function Reviews({
                   </div>
                 </div>
 
-                <span className="rounded-full border border-border px-3 py-1 text-xs">
-                  {label(review.status)}
+                <span
+                  className={`rounded-full border px-3 py-1 text-xs ${
+                    review.approved === true
+                      ? "border-cyan text-cyan"
+                      : "border-purple text-purple"
+                  }`}
+                >
+                  {review.approved === true
+                    ? "APPROVED"
+                    : "PENDING"}
                 </span>
+              </div>
+
+              <div className="mt-4 flex gap-1 text-sm text-yellow-300">
+                {"★".repeat(
+                  Number(review.rating) || 0
+                )}
               </div>
 
               <p className="mt-4 whitespace-pre-wrap text-ink-muted">
@@ -1253,8 +1301,7 @@ function Reviews({
               </p>
 
               <div className="mt-5 flex flex-wrap gap-2">
-                {review.status !==
-                  "approved" && (
+                {review.approved !== true && (
                   <Button
                     onClick={() =>
                       action(
@@ -1267,25 +1314,9 @@ function Reviews({
                   </Button>
                 )}
 
-                {review.status !==
-                  "rejected" && (
+                {review.approved === true && (
                   <Button
                     variant="secondary"
-                    onClick={() =>
-                      action(
-                        review.id,
-                        "rejected"
-                      )
-                    }
-                  >
-                    REJECT
-                  </Button>
-                )}
-
-                {review.status ===
-                  "approved" && (
-                  <Button
-                    variant="outline"
                     onClick={() =>
                       action(
                         review.id,
@@ -1303,7 +1334,7 @@ function Reviews({
                     remove(review.id)
                   }
                 >
-                  DELETE
+                  REJECT & DELETE
                 </Button>
               </div>
             </article>
