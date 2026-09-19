@@ -188,15 +188,46 @@ function OurWork() {
     loadProjects();
   }, []);
 
+  const dynamicVideos = useMemo(() => {
+    return projects
+      .filter(
+        (project) =>
+          getMediaType(project) === "video" &&
+          project.media_url
+      )
+      .map((project) => ({
+        id: `portfolio-${project.id}`,
+        category: project.category || "Systems",
+        number: "PORTFOLIO",
+        title: project.title,
+        description:
+          project.description ||
+          "Click to watch this community system demonstration.",
+        video: getProjectMediaUrl(project),
+        isPortfolio: true,
+      }));
+  }, [projects]);
+
+  const allVideos = useMemo(() => {
+    return [...dynamicVideos, ...showcaseVideos];
+  }, [dynamicVideos]);
+
   const filteredVideos = useMemo(() => {
     if (videoCategory === "All Videos") {
-      return showcaseVideos;
+      return allVideos;
     }
 
-    return showcaseVideos.filter(
-      (video) => video.category === videoCategory
-    );
-  }, [videoCategory]);
+    return allVideos.filter((video) => {
+      const categoryName = video.category.toLowerCase();
+      const selectedName = videoCategory.toLowerCase();
+
+      return (
+        categoryName === selectedName ||
+        categoryName.includes(selectedName.replace(" system", "")) ||
+        selectedName.includes(categoryName)
+      );
+    });
+  }, [allVideos, videoCategory]);
 
   const filteredProjects = useMemo(() => {
     if (category === "All Work") {
@@ -221,6 +252,21 @@ function OurWork() {
       new Set(["All Work", ...categories, ...databaseCategories])
     );
   }, [projects]);
+
+  useEffect(() => {
+    function handleEscape(event) {
+      if (event.key === "Escape") {
+        setSelectedVideo(null);
+        setSelectedProject(null);
+      }
+    }
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   return (
     <main className="bg-brand-field">
@@ -344,13 +390,16 @@ function OurWork() {
                     src={video.video}
                     muted
                     preload="metadata"
+                    playsInline
                     className="h-full w-full object-cover opacity-70 transition duration-300 group-hover:scale-105 group-hover:opacity-90"
                   />
 
                   <div className="absolute inset-0 bg-black/20" />
 
                   <div className="absolute left-4 top-4 rounded-full border border-cyan/50 bg-brand-field/80 px-3 py-1 text-xs font-semibold tracking-[0.15em] text-cyan backdrop-blur">
-                    VIDEO DEMO
+                    {video.isPortfolio
+                      ? "PORTFOLIO VIDEO"
+                      : "VIDEO DEMO"}
                   </div>
 
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -504,6 +553,7 @@ function OurWork() {
                             src={mediaUrl}
                             muted
                             preload="metadata"
+                            playsInline
                             className="h-full w-full object-cover opacity-70 transition duration-300 group-hover:scale-105 group-hover:opacity-90"
                           />
 
@@ -745,51 +795,60 @@ function OurWork() {
       {selectedVideo && (
 
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 sm:p-6"
           onClick={() => setSelectedVideo(null)}
         >
 
           <div
-            className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-border bg-surface p-4"
+            className="relative flex max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl"
             onClick={(event) => event.stopPropagation()}
           >
 
             <button
               onClick={() => setSelectedVideo(null)}
-              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
+              className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
               aria-label="Close video"
             >
               ×
             </button>
 
-            <div className="mb-4 pr-12">
+            <div className="shrink-0 px-5 pb-4 pt-5 pr-16 sm:px-6 sm:pt-6">
 
               <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
                 {selectedVideo.category.toUpperCase()}
               </p>
 
-              <h2 className="mt-2 text-2xl font-semibold">
-                {selectedVideo.title} — {selectedVideo.number}
+              <h2 className="mt-2 text-xl font-semibold sm:text-2xl">
+                {selectedVideo.title}
               </h2>
+
+              <p className="mt-2 text-sm leading-6 text-ink-muted">
+                {selectedVideo.description}
+              </p>
 
             </div>
 
-            <video
-              key={selectedVideo.video}
-              controls
-              autoPlay
-              playsInline
-              className="w-full rounded-xl bg-black"
-            >
+            <div className="flex min-h-0 flex-1 items-center justify-center bg-black px-3 pb-3 sm:px-5 sm:pb-5">
 
-              <source
-                src={selectedVideo.video}
-                type="video/mp4"
-              />
+              <video
+                key={selectedVideo.video}
+                controls
+                autoPlay
+                playsInline
+                preload="auto"
+                className="max-h-[72vh] w-full rounded-xl bg-black object-contain sm:max-h-[76vh]"
+              >
 
-              Your browser does not support the video tag.
+                <source
+                  src={selectedVideo.video}
+                  type="video/mp4"
+                />
 
-            </video>
+                Your browser does not support the video tag.
+
+              </video>
+
+            </div>
 
           </div>
 
@@ -802,36 +861,36 @@ function OurWork() {
       {selectedProject && (
 
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 sm:p-6"
           onClick={() => setSelectedProject(null)}
         >
 
           <div
-            className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-border bg-surface p-4"
+            className="relative flex max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl"
             onClick={(event) => event.stopPropagation()}
           >
 
             <button
               onClick={() => setSelectedProject(null)}
-              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
+              className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
               aria-label="Close project"
             >
               ×
             </button>
 
-            <div className="mb-4 pr-12">
+            <div className="shrink-0 px-5 pb-4 pt-5 pr-16 sm:px-6 sm:pt-6">
 
               <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
                 {(selectedProject.category || "Portfolio").toUpperCase()}
               </p>
 
-              <h2 className="mt-2 text-2xl font-semibold">
+              <h2 className="mt-2 text-xl font-semibold sm:text-2xl">
                 {selectedProject.title}
               </h2>
 
               {selectedProject.description && (
 
-                <p className="mt-3 leading-7 text-ink-muted">
+                <p className="mt-3 text-sm leading-6 text-ink-muted sm:text-base">
                   {selectedProject.description}
                 </p>
 
@@ -839,36 +898,41 @@ function OurWork() {
 
             </div>
 
-            {getMediaType(selectedProject) === "video" && (
+            <div className="flex min-h-0 flex-1 items-center justify-center overflow-auto bg-black p-3 sm:p-5">
 
-              <video
-                key={getProjectMediaUrl(selectedProject)}
-                controls
-                autoPlay
-                playsInline
-                className="w-full rounded-xl bg-black"
-              >
+              {getMediaType(selectedProject) === "video" && (
 
-                <source
+                <video
+                  key={getProjectMediaUrl(selectedProject)}
+                  controls
+                  autoPlay
+                  playsInline
+                  preload="auto"
+                  className="max-h-[72vh] w-full rounded-xl bg-black object-contain sm:max-h-[76vh]"
+                >
+
+                  <source
+                    src={getProjectMediaUrl(selectedProject)}
+                    type="video/mp4"
+                  />
+
+                  Your browser does not support the video tag.
+
+                </video>
+
+              )}
+
+              {getMediaType(selectedProject) !== "video" && (
+
+                <img
                   src={getProjectMediaUrl(selectedProject)}
-                  type="video/mp4"
+                  alt={selectedProject.title}
+                  className="max-h-[76vh] w-full rounded-xl object-contain"
                 />
 
-                Your browser does not support the video tag.
+              )}
 
-              </video>
-
-            )}
-
-            {getMediaType(selectedProject) !== "video" && (
-
-              <img
-                src={getProjectMediaUrl(selectedProject)}
-                alt={selectedProject.title}
-                className="w-full rounded-xl object-contain"
-              />
-
-            )}
+            </div>
 
           </div>
 
