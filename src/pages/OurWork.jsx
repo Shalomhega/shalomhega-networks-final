@@ -681,6 +681,35 @@ function OurWork() {
 
       </Section>
 
+      {/* ADMIN ACCESS */}
+
+      <section className="border-t border-border px-6 py-12">
+
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 rounded-2xl border border-border bg-surface/50 px-6 py-6 sm:flex-row">
+
+          <div>
+
+            <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
+              PRIVATE ADMIN AREA
+            </p>
+
+            <p className="mt-2 text-sm text-ink-muted">
+              Portfolio management and website administration.
+            </p>
+
+          </div>
+
+          <Link
+            to="/admin"
+            className="inline-flex items-center justify-center rounded-full border border-purple/60 bg-purple/10 px-5 py-2.5 text-sm font-semibold text-purple transition hover:border-purple hover:bg-purple hover:text-ink"
+          >
+            ADMIN ACCESS
+          </Link>
+
+        </div>
+
+      </section>
+
       {/* CTA */}
 
       <section className="border-t border-border px-6 py-20 text-center">
