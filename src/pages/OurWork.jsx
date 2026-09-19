@@ -5,9 +5,6 @@ import { portfolioCategories } from "../data/portfolio.js";
 import { supabase, isSupabaseConfigured } from "../lib/supabase.js";
 
 const showcaseVideos = [
-  // =========================
-  // TEMPLATE VIDEOS
-  // =========================
   ...Array.from({ length: 6 }, (_, index) => {
     const number = String(index + 1).padStart(2, "0");
 
@@ -21,9 +18,6 @@ const showcaseVideos = [
     };
   }),
 
-  // =========================
-  // VERIFICATION VIDEOS
-  // =========================
   ...Array.from({ length: 7 }, (_, index) => {
     const number = String(index + 1).padStart(2, "0");
 
@@ -37,9 +31,6 @@ const showcaseVideos = [
     };
   }),
 
-  // =========================
-  // WELCOME SYSTEM VIDEOS
-  // =========================
   ...Array.from({ length: 8 }, (_, index) => {
     const number = String(index + 1).padStart(2, "0");
 
@@ -53,9 +44,6 @@ const showcaseVideos = [
     };
   }),
 
-  // =========================
-  // RULES SYSTEM VIDEOS
-  // =========================
   ...Array.from({ length: 7 }, (_, index) => {
     const number = String(index + 1).padStart(2, "0");
 
@@ -69,9 +57,6 @@ const showcaseVideos = [
     };
   }),
 
-  // =========================
-  // ROLES SYSTEM VIDEOS
-  // =========================
   ...Array.from({ length: 3 }, (_, index) => {
     const number = String(index + 1).padStart(2, "0");
 
@@ -85,9 +70,6 @@ const showcaseVideos = [
     };
   }),
 
-  // =========================
-  // FAQ SYSTEM VIDEOS
-  // =========================
   {
     id: "faq-01",
     category: "FAQ System",
@@ -108,17 +90,11 @@ const videoCategories = [
   "FAQ System",
 ];
 
-// =========================
-// GET SUPABASE MEDIA URL
-// =========================
-
 function getProjectMediaUrl(project) {
   if (!project?.media_url) {
     return "";
   }
 
-  // If media_url is already a complete URL,
-  // use it directly.
   if (
     project.media_url.startsWith("http://") ||
     project.media_url.startsWith("https://")
@@ -126,22 +102,16 @@ function getProjectMediaUrl(project) {
     return project.media_url;
   }
 
-  // If media_url is a Storage path,
-  // generate the public URL from Supabase.
   if (supabase) {
     const { data } = supabase.storage
-      .from("portfolio-media")
+      .from("portfolio-videos")
       .getPublicUrl(project.media_url);
 
-    return data.publicUrl;
+    return data?.publicUrl || project.media_url;
   }
 
   return project.media_url;
 }
-
-// =========================
-// CHECK MEDIA TYPE
-// =========================
 
 function getMediaType(project) {
   if (project?.media_type) {
@@ -162,26 +132,14 @@ function getMediaType(project) {
 }
 
 function OurWork() {
-  // =========================
-  // VIDEO SHOWCASE STATES
-  // =========================
-
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videoCategory, setVideoCategory] = useState("All Videos");
-
-  // =========================
-  // SUPABASE PROJECT STATES
-  // =========================
 
   const [category, setCategory] = useState("All Work");
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [projectsLoading, setProjectsLoading] = useState(true);
   const [projectsError, setProjectsError] = useState(null);
-
-  // =========================
-  // LOAD SUPABASE PROJECTS
-  // =========================
 
   useEffect(() => {
     async function loadProjects() {
@@ -200,7 +158,9 @@ function OurWork() {
 
         const { data, error } = await supabase
           .from("portfolio_projects")
-          .select("*")
+          .select(
+            "id, created_at, title, description, category, media_url, media_type, display_order, is_published"
+          )
           .eq("is_published", true)
           .order("display_order", {
             ascending: true,
@@ -228,10 +188,6 @@ function OurWork() {
     loadProjects();
   }, []);
 
-  // =========================
-  // VIDEO SHOWCASE FILTER
-  // =========================
-
   const filteredVideos = useMemo(() => {
     if (videoCategory === "All Videos") {
       return showcaseVideos;
@@ -241,10 +197,6 @@ function OurWork() {
       (video) => video.category === videoCategory
     );
   }, [videoCategory]);
-
-  // =========================
-  // PROJECT SHOWCASE FILTER
-  // =========================
 
   const filteredProjects = useMemo(() => {
     if (category === "All Work") {
@@ -256,22 +208,24 @@ function OurWork() {
     );
   }, [category, projects]);
 
-  // =========================
-  // PROJECT CATEGORIES
-  // =========================
-
   const projectCategories = useMemo(() => {
-    return portfolioCategories.filter(
+    const categories = portfolioCategories.filter(
       (item) => item !== "Video"
     );
-  }, []);
+
+    const databaseCategories = projects
+      .map((project) => project.category)
+      .filter(Boolean);
+
+    return Array.from(
+      new Set(["All Work", ...categories, ...databaseCategories])
+    );
+  }, [projects]);
 
   return (
     <main className="bg-brand-field">
 
-      {/* ========================= */}
-      {/* HERO SECTION */}
-      {/* ========================= */}
+      {/* HERO */}
 
       <section className="relative overflow-hidden border-b border-border px-6 py-20 sm:py-28">
         <div className="mx-auto max-w-6xl">
@@ -315,9 +269,7 @@ function OurWork() {
         </div>
       </section>
 
-      {/* ========================= */}
       {/* VIDEO SHOWCASE */}
-      {/* ========================= */}
 
       <Section className="px-6 py-16 sm:py-20">
 
@@ -344,8 +296,6 @@ function OurWork() {
 
           </div>
 
-          {/* VIDEO FILTERS */}
-
           <div className="mb-10 flex flex-wrap gap-2">
 
             {videoCategories.map((item) => (
@@ -366,8 +316,6 @@ function OurWork() {
 
           </div>
 
-          {/* VIDEO COUNT */}
-
           <p className="mb-6 text-sm text-ink-muted">
 
             Showing{" "}
@@ -379,8 +327,6 @@ function OurWork() {
             {filteredVideos.length === 1 ? "video" : "videos"}
 
           </p>
-
-          {/* VIDEO CARDS */}
 
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
@@ -451,9 +397,7 @@ function OurWork() {
 
       </Section>
 
-      {/* ========================= */}
       {/* PROJECT SHOWCASE */}
-      {/* ========================= */}
 
       <Section className="border-t border-border px-6 py-16 sm:py-20">
 
@@ -474,13 +418,12 @@ function OurWork() {
             </div>
 
             <p className="max-w-xl text-sm leading-6 text-ink-muted">
-              Explore real community development, branding, systems, and project
-              work published directly from the SHALOMHEGA NETWORKS portfolio.
+              Explore real community development, branding, systems, and
+              project work published directly from the SHALOMHEGA NETWORKS
+              portfolio.
             </p>
 
           </div>
-
-          {/* PROJECT FILTERS */}
 
           <div className="mb-10 flex flex-wrap gap-2">
 
@@ -502,8 +445,6 @@ function OurWork() {
 
           </div>
 
-          {/* PROJECT LOADING */}
-
           {projectsLoading && (
 
             <div className="rounded-3xl border border-border bg-surface/60 p-10 text-center">
@@ -520,8 +461,6 @@ function OurWork() {
 
           )}
 
-          {/* PROJECT ERROR */}
-
           {!projectsLoading && projectsError && (
 
             <div className="rounded-3xl border border-red-500/30 bg-surface/60 p-10 text-center">
@@ -537,8 +476,6 @@ function OurWork() {
             </div>
 
           )}
-
-          {/* PROJECT CARDS */}
 
           {!projectsLoading &&
             !projectsError &&
@@ -649,8 +586,6 @@ function OurWork() {
 
             )}
 
-          {/* EMPTY PROJECT STATE */}
-
           {!projectsLoading &&
             !projectsError &&
             filteredProjects.length === 0 && (
@@ -697,9 +632,7 @@ function OurWork() {
 
       </Section>
 
-      {/* ========================= */}
       {/* HOW TO EXPLORE */}
-      {/* ========================= */}
 
       <Section className="border-t border-border px-6 py-16 sm:py-20">
 
@@ -748,9 +681,7 @@ function OurWork() {
 
       </Section>
 
-      {/* ========================= */}
       {/* CTA */}
-      {/* ========================= */}
 
       <section className="border-t border-border px-6 py-20 text-center">
 
@@ -780,9 +711,7 @@ function OurWork() {
 
       </section>
 
-      {/* ========================= */}
       {/* VIDEO MODAL */}
-      {/* ========================= */}
 
       {selectedVideo && (
 
@@ -839,9 +768,7 @@ function OurWork() {
 
       )}
 
-      {/* ========================= */}
       {/* SUPABASE PROJECT MODAL */}
-      {/* ========================= */}
 
       {selectedProject && (
 
