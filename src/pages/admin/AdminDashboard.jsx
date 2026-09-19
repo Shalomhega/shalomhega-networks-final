@@ -84,11 +84,12 @@ function AdminDashboard() {
       return;
     }
 
-    const { data: admin, error: adminError } = await supabase
-      .from("admin_users")
-      .select("user_id")
-      .eq("user_id", user.id)
-      .maybeSingle();
+    const { data: admin, error: adminError } =
+      await supabase
+        .from("admin_users")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
 
     if (adminError || !admin) {
       await supabase.auth.signOut();
@@ -107,18 +108,26 @@ function AdminDashboard() {
       supabase
         .from("reviews")
         .select("*")
-        .order("created_at", { ascending: false }),
+        .order("created_at", {
+          ascending: false,
+        }),
 
       supabase
         .from("project_inquiries")
         .select("*")
-        .order("created_at", { ascending: false }),
+        .order("created_at", {
+          ascending: false,
+        }),
 
       supabase
         .from("portfolio_projects")
         .select("*")
-        .order("display_order", { ascending: true })
-        .order("created_at", { ascending: false }),
+        .order("display_order", {
+          ascending: true,
+        })
+        .order("created_at", {
+          ascending: false,
+        }),
     ]);
 
     if (!reviewsResult.error) {
@@ -198,7 +207,8 @@ function AdminDashboard() {
         inquiryStatuses.map((status) => [
           status,
           inquiries.filter(
-            (inquiry) => inquiry.status === status
+            (inquiry) =>
+              inquiry.status === status
           ).length,
         ])
       ),
@@ -353,7 +363,8 @@ function AdminDashboard() {
       .from("project_inquiries")
       .update({
         status,
-        updated_at: new Date().toISOString(),
+        updated_at:
+          new Date().toISOString(),
       })
       .eq("id", id);
 
@@ -373,7 +384,8 @@ function AdminDashboard() {
       .from("project_inquiries")
       .update({
         notes,
-        updated_at: new Date().toISOString(),
+        updated_at:
+          new Date().toISOString(),
       })
       .eq("id", id);
 
@@ -429,9 +441,9 @@ function AdminDashboard() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => {
-                setTab("notifications");
-              }}
+              onClick={() =>
+                setTab("notifications")
+              }
               className="relative rounded-xl border border-border px-4 py-2 text-sm"
             >
               NOTIFICATIONS
@@ -623,18 +635,14 @@ function Overview({
 
       <section className="grid gap-4 sm:grid-cols-2">
         <button
-          onClick={() => {
-            setTab("reviews");
-          }}
+          onClick={() => setTab("reviews")}
           className="rounded-2xl border border-border bg-surface p-6 text-left font-semibold"
         >
           MANAGE REVIEWS
         </button>
 
         <button
-          onClick={() => {
-            setTab("inquiries");
-            }}
+          onClick={() => setTab("inquiries")}
           className="rounded-2xl border border-border bg-surface p-6 text-left font-semibold"
         >
           VIEW PROJECT INQUIRIES
@@ -699,50 +707,83 @@ function Portfolio({
   const [selectedSlot, setSelectedSlot] =
     useState(portfolioSlots[0].id);
 
+  const [selectedProjectId, setSelectedProjectId] =
+    useState(null);
+
+  const [mode, setMode] = useState("new");
+
   const selectedSlotData =
     portfolioSlots.find(
       (slot) => slot.id === selectedSlot
     ) || portfolioSlots[0];
 
-  const selectedProject =
-    portfolio.find(
+  const slotProjects = portfolio
+    .filter(
       (project) =>
         project.display_order ===
         selectedSlotData.displayOrder
+    )
+    .sort(
+      (a, b) =>
+        new Date(b.created_at || 0) -
+        new Date(a.created_at || 0)
+    );
+
+  const selectedProject =
+    slotProjects.find(
+      (project) =>
+        String(project.id) ===
+        String(selectedProjectId)
     ) || null;
 
   const [title, setTitle] = useState(
     selectedSlotData.title
   );
+
   const [description, setDescription] =
     useState("");
+
   const [videoFile, setVideoFile] =
     useState(null);
+
   const [published, setPublished] =
     useState(true);
+
   const [saving, setSaving] =
     useState(false);
 
-  useEffect(() => {
-    setTitle(
-      selectedProject?.title ||
-        selectedSlotData.title
-    );
+  function startNewVideo() {
+    setMode("new");
+    setSelectedProjectId(null);
+    setTitle(selectedSlotData.title);
+    setDescription("");
+    setPublished(true);
+    setVideoFile(null);
+    setMessage("");
+  }
 
+  function editProject(project) {
+    setMode("edit");
+    setSelectedProjectId(project.id);
+    setTitle(project.title || "");
     setDescription(
-      selectedProject?.description || ""
+      project.description || ""
     );
-
     setPublished(
-      selectedProject?.is_published ?? true
+      project.is_published ?? true
     );
+    setVideoFile(null);
+    setMessage("");
+  }
 
+  useEffect(() => {
+    setMode("new");
+    setSelectedProjectId(null);
+    setTitle(selectedSlotData.title);
+    setDescription("");
+    setPublished(true);
     setVideoFile(null);
   }, [
-    selectedProject?.id,
-    selectedProject?.title,
-    selectedProject?.description,
-    selectedProject?.is_published,
     selectedSlotData.id,
     selectedSlotData.title,
   ]);
@@ -758,6 +799,20 @@ function Portfolio({
     if (!title.trim()) {
       setMessage(
         "Please enter a portfolio title."
+      );
+      return;
+    }
+
+    if (mode === "new" && !videoFile) {
+      setMessage(
+        "Please choose a video before adding a new portfolio item."
+      );
+      return;
+    }
+
+    if (mode === "edit" && !selectedProject) {
+      setMessage(
+        "Please select an existing video to edit."
       );
       return;
     }
@@ -822,10 +877,7 @@ function Portfolio({
           description.trim(),
         category: "Systems",
         media_url: mediaUrl,
-        media_type: videoFile
-          ? "video"
-          : selectedProject?.media_type ||
-            "video",
+        media_type: "video",
         display_order:
           selectedSlotData.displayOrder,
         is_published: published,
@@ -833,7 +885,26 @@ function Portfolio({
 
       let result;
 
-      if (selectedProject?.id) {
+      /*
+       * NEW VIDEO
+       *
+       * Always INSERT.
+       * This is the important change.
+       * It will never replace an existing video.
+       */
+      if (mode === "new") {
+        result = await supabase
+          .from("portfolio_projects")
+          .insert(payload);
+      }
+
+      /*
+       * EXISTING VIDEO
+       *
+       * Only UPDATE when the user deliberately
+       * selected an existing video.
+       */
+      if (mode === "edit") {
         result = await supabase
           .from("portfolio_projects")
           .update(payload)
@@ -841,25 +912,35 @@ function Portfolio({
             "id",
             selectedProject.id
           );
-      } else {
-        result = await supabase
-          .from("portfolio_projects")
-          .insert(payload);
       }
 
-      if (result.error) {
+      if (result?.error) {
         throw new Error(
           result.error.message
         );
       }
 
       setMessage(
-        `${selectedSlotData.title} updated successfully.`
+        mode === "new"
+          ? `${selectedSlotData.title} video added successfully. Existing videos were kept.`
+          : `${selectedSlotData.title} video updated successfully.`
       );
 
       setVideoFile(null);
 
       await reload();
+
+      /*
+       * After adding a new video, reset the form
+       * so the next upload is another NEW video.
+       */
+      if (mode === "new") {
+        setMode("new");
+        setSelectedProjectId(null);
+        setTitle(selectedSlotData.title);
+        setDescription("");
+        setPublished(true);
+      }
     } catch (error) {
       console.error(
         "Portfolio save error:",
@@ -875,16 +956,16 @@ function Portfolio({
     }
   }
 
-  async function removePortfolio() {
-    if (!selectedProject?.id) {
+  async function removePortfolio(project) {
+    if (!project?.id) {
       setMessage(
-        "There is no portfolio item in this section yet."
+        "There is no portfolio item selected."
       );
       return;
     }
 
     const confirmed = confirm(
-      `Remove ${selectedSlotData.title} from the website?`
+      `Remove "${project.title}" from the website?`
     );
 
     if (!confirmed) {
@@ -898,10 +979,7 @@ function Portfolio({
       const { error } = await supabase
         .from("portfolio_projects")
         .delete()
-        .eq(
-          "id",
-          selectedProject.id
-        );
+        .eq("id", project.id);
 
       if (error) {
         throw new Error(
@@ -910,8 +988,15 @@ function Portfolio({
       }
 
       setMessage(
-        `${selectedSlotData.title} was removed from the website.`
+        `"${project.title}" was removed from the website.`
       );
+
+      setSelectedProjectId(null);
+      setMode("new");
+      setTitle(selectedSlotData.title);
+      setDescription("");
+      setPublished(true);
+      setVideoFile(null);
 
       await reload();
     } catch (error) {
@@ -941,9 +1026,9 @@ function Portfolio({
         </h2>
 
         <p className="mt-3 max-w-2xl text-ink-muted">
-          Upload and manage the videos and descriptions
-          shown on the public Our Work page without
-          editing the website code.
+          Add multiple videos to each community system
+          without replacing existing work. Select an
+          existing video only when you want to edit it.
         </p>
       </div>
 
@@ -955,24 +1040,23 @@ function Portfolio({
 
           <div className="grid gap-2">
             {portfolioSlots.map((slot) => {
-              const project =
-                portfolio.find(
+              const count =
+                portfolio.filter(
                   (item) =>
                     item.display_order ===
                     slot.displayOrder
-                );
+                ).length;
 
               return (
                 <button
                   key={slot.id}
-                  onClick={() =>
+                  onClick={() => {
                     setSelectedSlot(
                       slot.id
-                    )
-                  }
+                    );
+                  }}
                   className={`rounded-xl px-4 py-3 text-left text-sm transition ${
-                    selectedSlot ===
-                    slot.id
+                    selectedSlot === slot.id
                       ? "bg-purple text-ink"
                       : "border border-border text-ink-muted hover:text-ink"
                   }`}
@@ -982,11 +1066,13 @@ function Portfolio({
                   </span>
 
                   <span className="mt-1 block text-xs opacity-70">
-                    {project
-                      ? project.is_published
-                        ? "Published"
-                        : "Saved, not published"
-                      : "Not added yet"}
+                    {count === 0
+                      ? "No videos yet"
+                      : `${count} ${
+                          count === 1
+                            ? "video"
+                            : "videos"
+                        }`}
                   </span>
                 </button>
               );
@@ -1003,6 +1089,133 @@ function Portfolio({
             <h3 className="mt-2 text-2xl font-bold">
               {selectedSlotData.title}
             </h3>
+          </div>
+
+          {slotProjects.length > 0 && (
+            <div className="mb-8">
+              <div className="mb-3 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-semibold tracking-widest text-ink-muted">
+                    EXISTING VIDEOS
+                  </p>
+
+                  <p className="mt-1 text-sm text-ink-muted">
+                    Select a video if you want to edit or remove it.
+                  </p>
+                </div>
+
+                <Button
+                  variant="secondary"
+                  onClick={startNewVideo}
+                  disabled={saving}
+                >
+                  + ADD NEW VIDEO
+                </Button>
+              </div>
+
+              <div className="grid gap-3">
+                {slotProjects.map(
+                  (project, index) => (
+                    <div
+                      key={project.id}
+                      className={`rounded-xl border p-4 ${
+                        selectedProjectId ===
+                        project.id
+                          ? "border-cyan bg-cyan/5"
+                          : "border-border"
+                      }`}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-4">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            editProject(
+                              project
+                            )
+                          }
+                          className="flex min-w-0 flex-1 items-center gap-3 text-left"
+                        >
+                          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-purple/20 text-sm font-bold">
+                            {index + 1}
+                          </div>
+
+                          <div className="min-w-0">
+                            <p className="truncate font-semibold">
+                              {project.title}
+                            </p>
+
+                            <p className="mt-1 text-xs text-ink-muted">
+                              {project.is_published
+                                ? "Published"
+                                : "Not published"}
+                            </p>
+                          </div>
+                        </button>
+
+                        <div className="flex gap-2">
+                          <Button
+                            variant="secondary"
+                            onClick={() =>
+                              editProject(
+                                project
+                              )
+                            }
+                            disabled={saving}
+                          >
+                            EDIT
+                          </Button>
+
+                          <Button
+                            variant="outline"
+                            onClick={() =>
+                              removePortfolio(
+                                project
+                              )
+                            }
+                            disabled={saving}
+                          >
+                            REMOVE
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          )}
+
+          {slotProjects.length === 0 && (
+            <div className="mb-6 rounded-xl border border-dashed border-border p-5 text-sm text-ink-muted">
+              No videos have been added to this section yet.
+              Add your first video below.
+            </div>
+          )}
+
+          <div className="mb-5 flex items-center justify-between border-b border-border pb-4">
+            <div>
+              <p className="text-xs font-semibold tracking-widest text-cyan">
+                {mode === "new"
+                  ? "NEW VIDEO"
+                  : "EDITING VIDEO"}
+              </p>
+
+              <p className="mt-1 text-sm text-ink-muted">
+                {mode === "new"
+                  ? "This will create a new portfolio item and keep all existing videos."
+                  : "Changes will only affect the selected video."}
+              </p>
+            </div>
+
+            {mode === "edit" && (
+              <Button
+                variant="secondary"
+                onClick={startNewVideo}
+                disabled={saving}
+              >
+                + NEW VIDEO
+              </Button>
+            )}
           </div>
 
           <div className="grid gap-6">
@@ -1040,29 +1253,30 @@ function Portfolio({
               />
             </div>
 
-            {selectedProject?.media_url && (
-              <div>
-                <label className="text-sm font-semibold">
-                  CURRENT VIDEO
-                </label>
+            {mode === "edit" &&
+              selectedProject?.media_url && (
+                <div>
+                  <label className="text-sm font-semibold">
+                    CURRENT VIDEO
+                  </label>
 
-                <video
-                  src={
-                    selectedProject.media_url
-                  }
-                  controls
-                  playsInline
-                  preload="metadata"
-                  className="mt-2 max-h-96 w-full rounded-xl border border-border bg-black"
-                />
-              </div>
-            )}
+                  <video
+                    src={
+                      selectedProject.media_url
+                    }
+                    controls
+                    playsInline
+                    preload="metadata"
+                    className="mt-2 max-h-96 w-full rounded-xl border border-border bg-black"
+                  />
+                </div>
+              )}
 
             <div>
               <label className="text-sm font-semibold">
-                {selectedProject?.media_url
-                  ? "REPLACE VIDEO"
-                  : "UPLOAD VIDEO"}
+                {mode === "edit"
+                  ? "REPLACE THIS VIDEO (OPTIONAL)"
+                  : "UPLOAD NEW VIDEO"}
               </label>
 
               <input
@@ -1107,8 +1321,7 @@ function Portfolio({
                 </span>
 
                 <span className="block text-sm text-ink-muted">
-                  When enabled, this portfolio section
-                  will be visible publicly.
+                  When enabled, this portfolio video will be visible publicly.
                 </span>
               </span>
             </label>
@@ -1120,22 +1333,25 @@ function Portfolio({
               >
                 {saving
                   ? "SAVING..."
-                  : selectedProject
-                  ? "SAVE CHANGES"
-                  : "ADD TO PORTFOLIO"}
+                  : mode === "new"
+                  ? "ADD NEW VIDEO"
+                  : "SAVE CHANGES"}
               </Button>
 
-              {selectedProject && (
-                <Button
-                  variant="secondary"
-                  onClick={
-                    removePortfolio
-                  }
-                  disabled={saving}
-                >
-                  REMOVE FROM WEBSITE
-                </Button>
-              )}
+              {mode === "edit" &&
+                selectedProject && (
+                  <Button
+                    variant="secondary"
+                    onClick={() =>
+                      removePortfolio(
+                        selectedProject
+                      )
+                    }
+                    disabled={saving}
+                  >
+                    REMOVE VIDEO
+                  </Button>
+                )}
             </div>
           </div>
         </div>
@@ -1204,11 +1420,13 @@ function Reviews({
   const visible =
     filter === "pending"
       ? reviews.filter(
-          (review) => review.approved !== true
+          (review) =>
+            review.approved !== true
         )
       : filter === "approved"
       ? reviews.filter(
-          (review) => review.approved === true
+          (review) =>
+            review.approved === true
         )
       : reviews;
 
