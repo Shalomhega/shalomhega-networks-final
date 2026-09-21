@@ -191,6 +191,7 @@ function OurWork() {
   // =========================
   // DATABASE VIDEO SHOWCASE
   // =========================
+
   const databaseVideos = useMemo(() => {
     return projects
       .filter((project) => getMediaType(project) === "video")
@@ -775,19 +776,19 @@ function OurWork() {
         >
 
           <div
-            className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-border bg-surface p-4"
+            className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-border bg-surface p-4"
             onClick={(event) => event.stopPropagation()}
           >
 
             <button
               onClick={() => setSelectedVideo(null)}
-              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
+              className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
               aria-label="Close video"
             >
               ×
             </button>
 
-            <div className="mb-4 pr-12">
+            <div className="mb-4 shrink-0 pr-12">
 
               <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
                 {selectedVideo.category.toUpperCase()}
@@ -799,22 +800,26 @@ function OurWork() {
 
             </div>
 
-            <video
-              key={selectedVideo.video}
-              controls
-              autoPlay
-              playsInline
-              className="w-full rounded-xl bg-black"
-            >
+            <div className="flex max-h-[70vh] min-h-0 w-full items-center justify-center overflow-hidden rounded-xl bg-black">
 
-              <source
-                src={selectedVideo.video}
-                type="video/mp4"
-              />
+              <video
+                key={selectedVideo.video}
+                controls
+                autoPlay
+                playsInline
+                className="max-h-[70vh] max-w-full rounded-xl bg-black object-contain"
+              >
 
-              Your browser does not support the video tag.
+                <source
+                  src={selectedVideo.video}
+                  type="video/mp4"
+                />
 
-            </video>
+                Your browser does not support the video tag.
+
+              </video>
+
+            </div>
 
           </div>
 
@@ -832,19 +837,19 @@ function OurWork() {
         >
 
           <div
-            className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-border bg-surface p-4"
+            className="relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-border bg-surface p-4"
             onClick={(event) => event.stopPropagation()}
           >
 
             <button
               onClick={() => setSelectedProject(null)}
-              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
+              className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
               aria-label="Close project"
             >
               ×
             </button>
 
-            <div className="mb-4 pr-12">
+            <div className="mb-4 shrink-0 pr-12">
 
               <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
                 {(selectedProject.category || "Portfolio").toUpperCase()}
@@ -866,32 +871,40 @@ function OurWork() {
 
             {getMediaType(selectedProject) === "video" && (
 
-              <video
-                key={getProjectMediaUrl(selectedProject)}
-                controls
-                autoPlay
-                playsInline
-                className="w-full rounded-xl bg-black"
-              >
+              <div className="flex max-h-[70vh] min-h-0 w-full items-center justify-center overflow-hidden rounded-xl bg-black">
 
-                <source
-                  src={getProjectMediaUrl(selectedProject)}
-                  type="video/mp4"
-                />
+                <video
+                  key={getProjectMediaUrl(selectedProject)}
+                  controls
+                  autoPlay
+                  playsInline
+                  className="max-h-[70vh] max-w-full rounded-xl bg-black object-contain"
+                >
 
-                Your browser does not support the video tag.
+                  <source
+                    src={getProjectMediaUrl(selectedProject)}
+                    type="video/mp4"
+                  />
 
-              </video>
+                  Your browser does not support the video tag.
+
+                </video>
+
+              </div>
 
             )}
 
             {getMediaType(selectedProject) !== "video" && (
 
-              <img
-                src={getProjectMediaUrl(selectedProject)}
-                alt={selectedProject.title}
-                className="w-full rounded-xl object-contain"
-              />
+              <div className="flex max-h-[70vh] min-h-0 items-center justify-center overflow-hidden rounded-xl bg-black">
+
+                <img
+                  src={getProjectMediaUrl(selectedProject)}
+                  alt={selectedProject.title}
+                  className="max-h-[70vh] max-w-full rounded-xl object-contain"
+                />
+
+              </div>
 
             )}
 
