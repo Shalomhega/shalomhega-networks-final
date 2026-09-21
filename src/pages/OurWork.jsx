@@ -191,8 +191,6 @@ function OurWork() {
   // =========================
   // DATABASE VIDEO SHOWCASE
   // =========================
-  // Videos published from the Admin Portfolio are added to
-  // the main video showcase automatically.
   const databaseVideos = useMemo(() => {
     return projects
       .filter((project) => getMediaType(project) === "video")
@@ -208,7 +206,10 @@ function OurWork() {
 
         return {
           id: `database-${project.id}`,
-          category: categoryByOrder[Number(project.display_order)] || project.category || "Other",
+          category:
+            categoryByOrder[Number(project.display_order)] ||
+            project.category ||
+            "Other",
           number: "PROJECT",
           title: project.title,
           description:
@@ -740,6 +741,24 @@ function OurWork() {
             className="mt-8 inline-flex rounded-full bg-purple px-6 py-3 text-sm font-semibold text-ink transition hover:bg-blue"
           >
             START YOUR PROJECT
+          </Link>
+
+        </div>
+
+      </section>
+
+      {/* ADMIN ACCESS */}
+
+      <section className="border-t border-border px-6 py-10">
+
+        <div className="mx-auto flex max-w-6xl justify-center">
+
+          <Link
+            to="/admin"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-6 py-3 text-sm font-semibold tracking-[0.08em] text-ink-muted transition hover:border-cyan hover:bg-cyan/10 hover:text-cyan"
+          >
+            <span aria-hidden="true">🔐</span>
+            ADMIN ACCESS
           </Link>
 
         </div>
