@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import AnnouncementBar from "./AnnouncementBar.jsx";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
+import CommunityPopup from "../ui/CommunityPopup.jsx";
 
 function MainLayout() {
   return (
@@ -12,6 +13,7 @@ function MainLayout() {
         <Outlet />
       </main>
       <Footer />
+      <CommunityPopup />
     </div>
   );
 }
