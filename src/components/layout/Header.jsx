@@ -112,7 +112,7 @@ function LanguageSelector({ mobile = false, onSelect }) {
           >
             <path
               fillRule="evenodd"
-              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06l-4.25-4.5a.75.75 0 0 1 .02-1.06Z"
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z"
               clipRule="evenodd"
             />
           </svg>
@@ -142,7 +142,7 @@ function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-[72px] max-w-7xl items-center gap-4 px-4 sm:px-6">
         <Link
           to="/"
           onClick={closeMenu}
@@ -152,7 +152,7 @@ function Header() {
           <img
             src="/images/shalomhega-logo.png"
             alt="SHALOMHEGA NETWORKS"
-            className="h-9 w-auto max-w-[185px] object-contain sm:h-10 sm:max-w-[210px]"
+            className="h-auto w-[155px] object-contain sm:w-[180px]"
           />
         </Link>
 
