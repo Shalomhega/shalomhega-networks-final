@@ -12,7 +12,7 @@ const navigationTranslationKeys = {
   Services: "services",
   "Community Systems": "systems",
   "Find Your Community Vibe": "vibe",
-    "Our Work": "work",
+  "Our Work": "work",
   Testimonials: "testimonials",
   Pricing: "pricing",
   "Our Team": "team",
@@ -112,7 +112,7 @@ function LanguageSelector({ mobile = false, onSelect }) {
           >
             <path
               fillRule="evenodd"
-              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z"
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06l-4.25-4.5a.75.75 0 0 1 .02-1.06Z"
               clipRule="evenodd"
             />
           </svg>
@@ -150,9 +150,9 @@ function Header() {
           aria-label="SHALOMHEGA NETWORKS Home"
         >
           <img
-            src="/images/NETWORKIMAGE.png"
+            src="/images/shalomhega-logo.png"
             alt="SHALOMHEGA NETWORKS"
-            className="h-11 w-auto sm:h-12"
+            className="h-9 w-auto max-w-[185px] object-contain sm:h-10 sm:max-w-[210px]"
           />
         </Link>
 
