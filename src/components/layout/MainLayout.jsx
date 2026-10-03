@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import AnnouncementBar from "./AnnouncementBar.jsx";
 import Header from "./Header.jsx";
@@ -6,9 +7,9 @@ import CommunityPopup from "../ui/CommunityPopup.jsx";
 import { trackWebsiteVisitor } from "../../lib/visitorTracking.js";
 
 function MainLayout() {
-  if (typeof window !== "undefined") {
+  useEffect(() => {
     trackWebsiteVisitor();
-  }
+  }, []);
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-field">
