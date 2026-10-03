@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { routes } from "../../routes/routes.js";
+import { useLanguage } from "../../lib/LanguageContext.jsx";
 
 const primaryLinks = routes.filter((route) => !route.isCta);
 const ctaLink = routes.find((route) => route.isCta);
@@ -21,6 +22,97 @@ function MenuIcon({ open }) {
         <path d="M4 7h16M4 12h16M4 17h16" />
       )}
     </svg>
+  );
+}
+
+function LanguageIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3c2.2 2.4 3.3 5.4 3.3 9s-1.1 6.6-3.3 9c-2.2-2.4-3.3-5.4-3.3-9S9.8 5.4 12 3Z" />
+    </svg>
+  );
+}
+
+function LanguageSelector({ mobile = false, onSelect }) {
+  const {
+    language,
+    changeLanguage,
+    currentLanguage,
+    supportedLanguages,
+  } = useLanguage();
+
+  return (
+    <div className={mobile ? "w-full" : "relative"}>
+      <label className="sr-only" htmlFor={mobile ? "mobile-language" : "desktop-language"}>
+        Select language
+      </label>
+
+      <div className="relative">
+        <LanguageIcon />
+
+        <select
+          id={mobile ? "mobile-language" : "desktop-language"}
+          value={language}
+          onChange={(event) => {
+            changeLanguage(event.target.value);
+
+            if (onSelect) {
+              onSelect();
+            }
+          }}
+          aria-label="Select website language"
+          className={`appearance-none rounded-lg border border-border bg-background text-ink outline-none transition-colors hover:border-cyan/50 focus:border-cyan ${
+            mobile
+              ? "w-full py-2.5 pl-9 pr-9 text-sm"
+              : "w-[125px] py-2 pl-8 pr-8 text-xs xl:text-sm"
+          }`}
+        >
+          {supportedLanguages.map((item) => (
+            <option key={item.code} value={item.code}>
+              {item.nativeName}
+            </option>
+          ))}
+        </select>
+
+        <span
+          className={`pointer-events-none absolute top-1/2 -translate-y-1/2 text-ink-muted ${
+            mobile ? "left-3" : "left-2.5"
+          }`}
+        >
+          <LanguageIcon />
+        </span>
+
+        <span
+          className={`pointer-events-none absolute top-1/2 -translate-y-1/2 text-ink-muted ${
+            mobile ? "right-3" : "right-2.5"
+          }`}
+        >
+          <svg
+            viewBox="0 0 20 20"
+            className="h-4 w-4"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </span>
+      </div>
+
+      <span className="sr-only">{currentLanguage.name}</span>
+    </div>
   );
 }
 
@@ -63,6 +155,8 @@ function Header() {
                 {label}
               </NavLink>
             ))}
+
+            <LanguageSelector />
 
             {ctaLink && (
               <NavLink
@@ -108,6 +202,10 @@ function Header() {
               </li>
             ))}
           </ul>
+
+          <div className="mt-4">
+            <LanguageSelector mobile onSelect={closeMenu} />
+          </div>
 
           {ctaLink && (
             <NavLink
