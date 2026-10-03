@@ -1,6 +1,6 @@
 export const ourWorkTranslations = {
   en: {
-    portfolio: "SHALOMHEGA NETWORKS PORTFOLIO",
+    portfolioLabel: "SHALOMHEGA NETWORKS PORTFOLIO",
     heroTitle: "THE WORK BEHIND THE COMMUNITY",
     heroDescription:
       "Explore real community development, systems, branding, and project experiences as they are added to the SHALOMHEGA NETWORKS portfolio.",
@@ -20,6 +20,7 @@ export const ourWorkTranslations = {
     rulesSystem: "Rules System",
     rolesSystem: "Roles System",
     faqSystem: "FAQ System",
+    other: "Other",
 
     showing: "Showing",
     video: "video",
@@ -40,14 +41,13 @@ export const ourWorkTranslations = {
     videoProject: "VIDEO PROJECT",
     projectMedia: "PROJECT MEDIA",
     project: "PROJECT",
-    portfolio: "PORTFOLIO",
+    portfolioCategory: "PORTFOLIO",
     realProjectMedia: "REAL PROJECT MEDIA WILL APPEAR HERE",
     portfolioInProgress: "PORTFOLIO IN PROGRESS",
     realWorkTitle: "REAL WORK DESERVES A REAL SHOWCASE",
     newProjects:
       "New published projects from the SHALOMHEGA NETWORKS portfolio will automatically appear here.",
-    noProjects:
-      "No published projects are currently available under",
+    noProjects: "No published projects are currently available under",
 
     howToExplore: "HOW TO EXPLORE",
     watchSystems: "WATCH REAL SYSTEMS",
@@ -74,7 +74,7 @@ export const ourWorkTranslations = {
   },
 
   es: {
-    portfolio: "PORTAFOLIO DE SHALOMHEGA NETWORKS",
+    portfolioLabel: "PORTAFOLIO DE SHALOMHEGA NETWORKS",
     heroTitle: "EL TRABAJO DETRÁS DE LA COMUNIDAD",
     heroDescription:
       "Explora desarrollo de comunidades, sistemas, branding y proyectos reales que se incorporan al portafolio de SHALOMHEGA NETWORKS.",
@@ -94,6 +94,7 @@ export const ourWorkTranslations = {
     rulesSystem: "Sistema de reglas",
     rolesSystem: "Sistema de roles",
     faqSystem: "Sistema de preguntas frecuentes",
+    other: "Otros",
 
     showing: "Mostrando",
     video: "video",
@@ -114,6 +115,7 @@ export const ourWorkTranslations = {
     videoProject: "PROYECTO DE VIDEO",
     projectMedia: "MULTIMEDIA DEL PROYECTO",
     project: "PROYECTO",
+    portfolioCategory: "PORTAFOLIO",
     realProjectMedia: "LA MULTIMEDIA DEL PROYECTO APARECERÁ AQUÍ",
     portfolioInProgress: "PORTAFOLIO EN PROGRESO",
     realWorkTitle: "EL TRABAJO REAL MERECE UNA PRESENTACIÓN REAL",
@@ -135,7 +137,7 @@ export const ourWorkTranslations = {
     projectLabel: "¿TIENES UN PROYECTO EN MENTE?",
     projectTitle: "HABLEMOS DE LO QUE QUIERES CONSTRUIR",
     projectDescription:
-      "Comienza con tu idea y podemos explorar el enfoque adecuado para tu comunidad.",
+      "Comienza con tu dirección y podemos explorar el enfoque adecuado para tu comunidad.",
     startProject: "INICIAR TU PROYECTO",
 
     adminAccess: "ACCESO DE ADMINISTRADOR",
@@ -145,7 +147,7 @@ export const ourWorkTranslations = {
   },
 
   fr: {
-    portfolio: "PORTFOLIO SHALOMHEGA NETWORKS",
+    portfolioLabel: "PORTFOLIO SHALOMHEGA NETWORKS",
     heroTitle: "LE TRAVAIL DERRIÈRE LA COMMUNAUTÉ",
     heroDescription:
       "Découvrez des projets réels de développement communautaire, de systèmes, de branding et de développement ajoutés au portfolio SHALOMHEGA NETWORKS.",
@@ -165,6 +167,7 @@ export const ourWorkTranslations = {
     rulesSystem: "Système de règles",
     rolesSystem: "Système de rôles",
     faqSystem: "Système FAQ",
+    other: "Autres",
 
     showing: "Affichage",
     video: "vidéo",
@@ -185,6 +188,7 @@ export const ourWorkTranslations = {
     videoProject: "PROJET VIDÉO",
     projectMedia: "MÉDIA DU PROJET",
     project: "PROJET",
+    portfolioCategory: "PORTFOLIO",
     realProjectMedia: "LES MÉDIAS DU PROJET APPARAÎTRONT ICI",
     portfolioInProgress: "PORTFOLIO EN COURS",
     realWorkTitle: "UN VRAI TRAVAIL MÉRITE UNE VRAIE PRÉSENTATION",
@@ -216,7 +220,7 @@ export const ourWorkTranslations = {
   },
 
   de: {
-    portfolio: "SHALOMHEGA NETWORKS PORTFOLIO",
+    portfolioLabel: "SHALOMHEGA NETWORKS PORTFOLIO",
     heroTitle: "DIE ARBEIT HINTER DER COMMUNITY",
     heroDescription:
       "Entdecke echte Community Entwicklung, Systeme, Branding und Projekte im SHALOMHEGA NETWORKS Portfolio.",
@@ -236,6 +240,7 @@ export const ourWorkTranslations = {
     rulesSystem: "Regelsystem",
     rolesSystem: "Rollensystem",
     faqSystem: "FAQ System",
+    other: "Andere",
 
     showing: "Angezeigt",
     video: "Video",
@@ -256,6 +261,7 @@ export const ourWorkTranslations = {
     videoProject: "VIDEOPROJEKT",
     projectMedia: "PROJEKT MEDIEN",
     project: "PROJEKT",
+    portfolioCategory: "PORTFOLIO",
     realProjectMedia: "PROJEKT MEDIEN WERDEN HIER ANGEZEIGT",
     portfolioInProgress: "PORTFOLIO IN ARBEIT",
     realWorkTitle: "ECHTE ARBEIT VERDIENT EINE ECHTE PRÄSENTATION",
@@ -287,7 +293,7 @@ export const ourWorkTranslations = {
   },
 
   pt: {
-    portfolio: "PORTFÓLIO SHALOMHEGA NETWORKS",
+    portfolioLabel: "PORTFÓLIO SHALOMHEGA NETWORKS",
     heroTitle: "O TRABALHO POR TRÁS DA COMUNIDADE",
     heroDescription:
       "Explore desenvolvimento de comunidades, sistemas, branding e projetos reais adicionados ao portfólio da SHALOMHEGA NETWORKS.",
@@ -307,6 +313,7 @@ export const ourWorkTranslations = {
     rulesSystem: "Sistema de regras",
     rolesSystem: "Sistema de funções",
     faqSystem: "Sistema FAQ",
+    other: "Outros",
 
     showing: "Mostrando",
     video: "vídeo",
@@ -327,6 +334,7 @@ export const ourWorkTranslations = {
     videoProject: "PROJETO DE VÍDEO",
     projectMedia: "MÍDIA DO PROJETO",
     project: "PROJETO",
+    portfolioCategory: "PORTFÓLIO",
     realProjectMedia: "A MÍDIA REAL DO PROJETO APARECERÁ AQUI",
     portfolioInProgress: "PORTFÓLIO EM ANDAMENTO",
     realWorkTitle: "TRABALHO REAL MERECE UMA APRESENTAÇÃO REAL",
@@ -358,7 +366,7 @@ export const ourWorkTranslations = {
   },
 
   it: {
-    portfolio: "PORTFOLIO SHALOMHEGA NETWORKS",
+    portfolioLabel: "PORTFOLIO SHALOMHEGA NETWORKS",
     heroTitle: "IL LAVORO DIETRO LA COMMUNITY",
     heroDescription:
       "Esplora sviluppo della community, sistemi, branding e progetti reali aggiunti al portfolio SHALOMHEGA NETWORKS.",
@@ -378,6 +386,7 @@ export const ourWorkTranslations = {
     rulesSystem: "Sistema di regole",
     rolesSystem: "Sistema ruoli",
     faqSystem: "Sistema FAQ",
+    other: "Altro",
 
     showing: "Mostrando",
     video: "video",
@@ -398,6 +407,7 @@ export const ourWorkTranslations = {
     videoProject: "PROGETTO VIDEO",
     projectMedia: "MEDIA DEL PROGETTO",
     project: "PROGETTO",
+    portfolioCategory: "PORTFOLIO",
     realProjectMedia: "I MEDIA REALI DEL PROGETTO APPARIRANNO QUI",
     portfolioInProgress: "PORTFOLIO IN CORSO",
     realWorkTitle: "IL LAVORO REALE MERITA UNA PRESENTAZIONE REALE",
@@ -429,7 +439,7 @@ export const ourWorkTranslations = {
   },
 
   ar: {
-    portfolio: "معرض أعمال SHALOMHEGA NETWORKS",
+    portfolioLabel: "معرض أعمال SHALOMHEGA NETWORKS",
     heroTitle: "العمل الذي يقف خلف المجتمع",
     heroDescription:
       "استكشف أعمال تطوير المجتمعات والأنظمة والهوية والمشاريع الحقيقية في معرض أعمال SHALOMHEGA NETWORKS.",
@@ -449,6 +459,7 @@ export const ourWorkTranslations = {
     rulesSystem: "نظام القواعد",
     rolesSystem: "نظام الأدوار",
     faqSystem: "نظام الأسئلة الشائعة",
+    other: "أخرى",
 
     showing: "عرض",
     video: "فيديو",
@@ -469,6 +480,7 @@ export const ourWorkTranslations = {
     videoProject: "مشروع فيديو",
     projectMedia: "وسائط المشروع",
     project: "مشروع",
+    portfolioCategory: "معرض الأعمال",
     realProjectMedia: "ستظهر وسائط المشروع هنا",
     portfolioInProgress: "معرض الأعمال قيد التطوير",
     realWorkTitle: "العمل الحقيقي يستحق عرضًا حقيقيًا",
@@ -500,7 +512,7 @@ export const ourWorkTranslations = {
   },
 
   zh: {
-    portfolio: "SHALOMHEGA NETWORKS 项目作品集",
+    portfolioLabel: "SHALOMHEGA NETWORKS 项目作品集",
     heroTitle: "社区背后的工作",
     heroDescription:
       "探索 SHALOMHEGA NETWORKS 中真实的社区开发、系统、品牌设计和项目成果。",
@@ -520,6 +532,7 @@ export const ourWorkTranslations = {
     rulesSystem: "规则系统",
     rolesSystem: "角色系统",
     faqSystem: "FAQ 系统",
+    other: "其他",
 
     showing: "显示",
     video: "个视频",
@@ -540,6 +553,7 @@ export const ourWorkTranslations = {
     videoProject: "视频项目",
     projectMedia: "项目媒体",
     project: "项目",
+    portfolioCategory: "作品集",
     realProjectMedia: "真实项目媒体将在这里显示",
     portfolioInProgress: "作品集正在建设",
     realWorkTitle: "真实工作值得真实展示",
@@ -571,7 +585,7 @@ export const ourWorkTranslations = {
   },
 
   ja: {
-    portfolio: "SHALOMHEGA NETWORKS ポートフォリオ",
+    portfolioLabel: "SHALOMHEGA NETWORKS ポートフォリオ",
     heroTitle: "コミュニティを支える仕事",
     heroDescription:
       "SHALOMHEGA NETWORKS の実際のコミュニティ開発、システム、ブランディング、プロジェクトをご覧ください。",
@@ -591,6 +605,7 @@ export const ourWorkTranslations = {
     rulesSystem: "ルールシステム",
     rolesSystem: "ロールシステム",
     faqSystem: "FAQ システム",
+    other: "その他",
 
     showing: "表示中",
     video: "動画",
@@ -611,6 +626,7 @@ export const ourWorkTranslations = {
     videoProject: "動画プロジェクト",
     projectMedia: "プロジェクトメディア",
     project: "プロジェクト",
+    portfolioCategory: "ポートフォリオ",
     realProjectMedia: "実際のプロジェクトメディアがここに表示されます",
     portfolioInProgress: "ポートフォリオ作成中",
     realWorkTitle: "実際の仕事には実際のショーケースを",
@@ -642,7 +658,7 @@ export const ourWorkTranslations = {
   },
 
   ko: {
-    portfolio: "SHALOMHEGA NETWORKS 포트폴리오",
+    portfolioLabel: "SHALOMHEGA NETWORKS 포트폴리오",
     heroTitle: "커뮤니티를 만드는 작업",
     heroDescription:
       "SHALOMHEGA NETWORKS의 실제 커뮤니티 개발, 시스템, 브랜딩 및 프로젝트를 확인해 보세요.",
@@ -662,6 +678,7 @@ export const ourWorkTranslations = {
     rulesSystem: "규칙 시스템",
     rolesSystem: "역할 시스템",
     faqSystem: "FAQ 시스템",
+    other: "기타",
 
     showing: "표시 중",
     video: "영상",
@@ -682,6 +699,7 @@ export const ourWorkTranslations = {
     videoProject: "영상 프로젝트",
     projectMedia: "프로젝트 미디어",
     project: "프로젝트",
+    portfolioCategory: "포트폴리오",
     realProjectMedia: "실제 프로젝트 미디어가 여기에 표시됩니다",
     portfolioInProgress: "포트폴리오 준비 중",
     realWorkTitle: "실제 작업에는 실제 쇼케이스가 필요합니다",
