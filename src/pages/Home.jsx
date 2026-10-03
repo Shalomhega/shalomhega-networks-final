@@ -11,9 +11,100 @@ import {
 
 function Arrow() {
   return (
-    <span aria-hidden="true" className="text-lg transition-transform duration-200 group-hover:translate-x-1">
+    <span
+      aria-hidden="true"
+      className="text-lg transition-transform duration-200 group-hover:translate-x-1"
+    >
       →
     </span>
+  );
+}
+
+function NetworkVisual() {
+  return (
+    <div className="relative mx-auto w-full max-w-[560px]">
+      <div className="absolute left-1/2 top-1/2 h-[26rem] w-[26rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple/10 blur-[100px]" />
+
+      <div className="absolute left-1/2 top-1/2 h-[20rem] w-[20rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan/10" />
+
+      <div className="absolute left-1/2 top-1/2 h-[14rem] w-[14rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue/10" />
+
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 600 600"
+        className="absolute inset-0 h-full w-full opacity-60"
+      >
+        <defs>
+          <linearGradient id="networkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="rgba(124,58,237,0.05)" />
+            <stop offset="50%" stopColor="rgba(59,130,246,0.65)" />
+            <stop offset="100%" stopColor="rgba(34,211,238,0.55)" />
+          </linearGradient>
+        </defs>
+
+        <line x1="90" y1="170" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1.5" />
+        <line x1="510" y1="150" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1.5" />
+        <line x1="105" y1="430" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1.5" />
+        <line x1="495" y1="445" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1.5" />
+        <line x1="180" y1="70" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1" />
+        <line x1="430" y1="75" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1" />
+        <line x1="170" y1="530" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1" />
+        <line x1="435" y1="525" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1" />
+
+        <circle cx="90" cy="170" r="5" fill="rgba(124,58,237,0.8)" />
+        <circle cx="510" cy="150" r="5" fill="rgba(34,211,238,0.8)" />
+        <circle cx="105" cy="430" r="5" fill="rgba(59,130,246,0.8)" />
+        <circle cx="495" cy="445" r="5" fill="rgba(124,58,237,0.8)" />
+        <circle cx="180" cy="70" r="4" fill="rgba(34,211,238,0.7)" />
+        <circle cx="430" cy="75" r="4" fill="rgba(59,130,246,0.7)" />
+        <circle cx="170" cy="530" r="4" fill="rgba(34,211,238,0.7)" />
+        <circle cx="435" cy="525" r="4" fill="rgba(124,58,237,0.7)" />
+      </svg>
+
+      <div className="relative flex aspect-square items-center justify-center">
+        <div className="absolute h-[15rem] w-[15rem] rounded-full bg-purple/10 blur-3xl" />
+
+        <div className="relative flex h-[15rem] w-[15rem] items-center justify-center rounded-full border border-white/[0.10] bg-surface/75 p-8 shadow-[0_30px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:h-[18rem] sm:w-[18rem] sm:p-10">
+          <div className="absolute inset-4 rounded-full border border-cyan/10" />
+
+          <div className="absolute inset-8 rounded-full border border-purple/10" />
+
+          <img
+            src="/images/Shalomnetwork.png"
+            alt="SHALOMHEGA NETWORKS"
+            className="relative z-10 max-h-[8rem] max-w-[11rem] object-contain drop-shadow-[0_0_35px_rgba(34,211,238,0.18)] sm:max-h-[10rem] sm:max-w-[13rem]"
+          />
+
+          <span className="absolute right-5 top-5 h-2.5 w-2.5 rounded-full bg-cyan shadow-[0_0_18px_rgba(34,211,238,0.9)]" />
+
+          <span className="absolute bottom-8 left-6 h-2 w-2 rounded-full bg-purple shadow-[0_0_15px_rgba(124,58,237,0.9)]" />
+
+          <span className="absolute bottom-12 right-7 h-1.5 w-1.5 rounded-full bg-blue shadow-[0_0_12px_rgba(59,130,246,0.9)]" />
+        </div>
+
+        <div className="absolute left-2 top-1/4 hidden rounded-xl border border-purple/20 bg-surface/80 px-4 py-3 shadow-xl backdrop-blur-md sm:block">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-purple">
+            Community
+          </p>
+          <div className="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-purple to-blue" />
+        </div>
+
+        <div className="absolute bottom-1/4 right-0 hidden rounded-xl border border-cyan/20 bg-surface/80 px-4 py-3 shadow-xl backdrop-blur-md sm:block">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan">
+            Systems
+          </p>
+          <div className="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-blue to-cyan" />
+        </div>
+
+        <div className="absolute right-4 top-10 hidden rounded-full border border-white/10 bg-background/70 px-3 py-2 text-xs text-ink-muted backdrop-blur-md sm:block">
+          Connected
+        </div>
+
+        <div className="absolute bottom-12 left-8 hidden rounded-full border border-white/10 bg-background/70 px-3 py-2 text-xs text-ink-muted backdrop-blur-md sm:block">
+          Built to grow
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -44,8 +135,17 @@ function Home() {
           }}
         />
 
-        <Container className="relative py-24 sm:py-32 lg:py-36">
-          <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-20"
+          style={{
+            background:
+              "radial-gradient(circle at 72% 42%, rgba(34,211,238,0.12), transparent 28%), radial-gradient(circle at 35% 30%, rgba(124,58,237,0.12), transparent 30%)",
+          }}
+        />
+
+        <Container className="relative py-20 sm:py-28 lg:py-32">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
             <div className="max-w-4xl">
               <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-cyan/20 bg-cyan/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan shadow-[0_0_30px_rgba(0,229,255,0.06)]">
                 <span
@@ -77,7 +177,7 @@ function Home() {
                 </Button>
               </div>
 
-              <div className="mt-14 grid max-w-3xl grid-cols-1 gap-5 sm:grid-cols-3">
+              <div className="mt-12 grid max-w-3xl grid-cols-1 gap-5 sm:grid-cols-3">
                 {content.highlights.map(([title, text]) => (
                   <div
                     key={title}
@@ -98,90 +198,7 @@ function Home() {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-              <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.09] bg-surface/70 p-5 shadow-[0_30px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-                <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-purple/20 blur-3xl" />
-                <div className="absolute -bottom-20 -left-20 h-48 w-48 rounded-full bg-cyan/10 blur-3xl" />
-
-                <div className="relative">
-                  <div className="flex items-center justify-between border-b border-white/[0.07] pb-4">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan">
-                        SHALOMHEGA
-                      </p>
-                      <p className="mt-1 text-sm text-ink-muted">
-                        NETWORKS
-                      </p>
-                    </div>
-
-                    <span className="grid h-10 w-10 place-items-center rounded-full border border-cyan/20 bg-cyan/5 text-cyan">
-                      ✦
-                    </span>
-                  </div>
-
-                  <div className="py-8">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="rounded-2xl border border-purple/20 bg-purple/5 p-5">
-                        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-purple">
-                          COMMUNITY
-                        </span>
-
-                        <div className="mt-7 h-2 w-20 rounded-full bg-gradient-to-r from-purple to-blue" />
-
-                        <div className="mt-3 h-2 w-12 rounded-full bg-white/10" />
-                      </div>
-
-                      <div className="rounded-2xl border border-cyan/20 bg-cyan/5 p-5">
-                        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan">
-                          SYSTEMS
-                        </span>
-
-                        <div className="mt-7 h-2 w-16 rounded-full bg-gradient-to-r from-blue to-cyan" />
-
-                        <div className="mt-3 h-2 w-10 rounded-full bg-white/10" />
-                      </div>
-                    </div>
-
-                    <div className="mt-3 rounded-2xl border border-white/[0.07] bg-background/60 p-5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs uppercase tracking-[0.14em] text-ink-muted">
-                          COMMUNITY FLOW
-                        </span>
-
-                        <span className="text-xs font-semibold text-cyan">
-                          ACTIVE
-                        </span>
-                      </div>
-
-                      <div className="mt-6 flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full bg-purple" />
-                        <span className="h-px flex-1 bg-gradient-to-r from-purple via-blue to-cyan" />
-                        <span className="h-2 w-2 rounded-full bg-blue" />
-                        <span className="h-px flex-1 bg-gradient-to-r from-blue to-cyan" />
-                        <span className="h-2 w-2 rounded-full bg-cyan" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-3 border-t border-white/[0.07] pt-4">
-                    <div>
-                      <p className="text-xs text-ink-muted">BUILD</p>
-                      <p className="mt-1 text-sm font-semibold">SYSTEM</p>
-                    </div>
-
-                    <div>
-                      <p className="text-xs text-ink-muted">CONNECT</p>
-                      <p className="mt-1 text-sm font-semibold">PEOPLE</p>
-                    </div>
-
-                    <div>
-                      <p className="text-xs text-ink-muted">GROW</p>
-                      <p className="mt-1 text-sm font-semibold">COMMUNITY</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <NetworkVisual />
           </div>
         </Container>
       </section>
