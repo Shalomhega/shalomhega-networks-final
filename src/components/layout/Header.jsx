@@ -2,9 +2,23 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { routes } from "../../routes/routes.js";
 import { useLanguage } from "../../lib/LanguageContext.jsx";
+import { getTranslation } from "../../data/translations.js";
 
 const primaryLinks = routes.filter((route) => !route.isCta);
 const ctaLink = routes.find((route) => route.isCta);
+
+const navigationTranslationKeys = {
+  Home: "home",
+  Services: "services",
+  "Community Systems": "systems",
+  "Find Your Community Vibe": "vibe",
+  "Our Work": "work",
+  Pricing: "pricing",
+  "Our Team": "team",
+  Reviews: "reviews",
+  "How It Works": "howItWorks",
+  "Start Your Project": "startProject",
+};
 
 function MenuIcon({ open }) {
   return (
@@ -53,15 +67,8 @@ function LanguageSelector({ mobile = false, onSelect }) {
 
   return (
     <div className={mobile ? "w-full" : "relative"}>
-      <label className="sr-only" htmlFor={mobile ? "mobile-language" : "desktop-language"}>
-        Select language
-      </label>
-
       <div className="relative">
-        <LanguageIcon />
-
         <select
-          id={mobile ? "mobile-language" : "desktop-language"}
           value={language}
           onChange={(event) => {
             changeLanguage(event.target.value);
@@ -116,8 +123,19 @@ function LanguageSelector({ mobile = false, onSelect }) {
   );
 }
 
+function getNavLabel(label, language) {
+  const key = navigationTranslationKeys[label];
+
+  if (!key) {
+    return label;
+  }
+
+  return getTranslation(language, "nav", key);
+}
+
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { language } = useLanguage();
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -152,7 +170,7 @@ function Header() {
                   }`
                 }
               >
-                {label}
+                {getNavLabel(label, language)}
               </NavLink>
             ))}
 
@@ -163,7 +181,7 @@ function Header() {
                 to={ctaLink.path}
                 className="ml-1 shrink-0 rounded-full bg-purple px-3.5 py-2 text-xs font-semibold text-ink transition-all duration-200 hover:bg-blue hover:shadow-lg hover:shadow-purple/20 xl:px-4 xl:text-sm"
               >
-                {ctaLink.label}
+                {getNavLabel(ctaLink.label, language)}
               </NavLink>
             )}
           </nav>
@@ -197,7 +215,7 @@ function Header() {
                     }`
                   }
                 >
-                  {label}
+                  {getNavLabel(label, language)}
                 </NavLink>
               </li>
             ))}
@@ -213,7 +231,7 @@ function Header() {
               onClick={closeMenu}
               className="mt-4 block rounded-full bg-purple px-4 py-2.5 text-center text-sm font-semibold text-ink transition-all duration-200 hover:bg-blue"
             >
-              {ctaLink.label}
+              {getNavLabel(ctaLink.label, language)}
             </NavLink>
           )}
         </nav>
