@@ -73,7 +73,7 @@ function FindYourCommunityVibe() {
             {content.vibes.map(([name, description, audience], index) => (
               <Card
                 key={name}
-                className="group flex min-h-[220px] flex-col p-6"
+                className="group flex min-h-[260px] flex-col p-6"
               >
                 <div className="mb-5 flex items-center justify-between">
                   <span className="text-xs font-semibold text-purple-300">
@@ -92,6 +92,15 @@ function FindYourCommunityVibe() {
                 <p className="mt-auto pt-5 text-xs text-slate-400">
                   {content.bestFor}, {audience}
                 </p>
+
+                <Link
+                  to={`/start-your-project?vibe=${encodeURIComponent(name)}`}
+                  className="mt-5"
+                >
+                  <Button className="w-full">
+                    {content.projectButton}
+                  </Button>
+                </Link>
               </Card>
             ))}
           </div>
