@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import Section from "../components/ui/Section.jsx";
 import { portfolioCategories } from "../data/portfolio.js";
 import { supabase, isSupabaseConfigured } from "../lib/supabase.js";
+import { useLanguage } from "../lib/LanguageContext.jsx";
+import { ourWorkTranslations } from "../data/ourWorkTranslations.js";
 
 const showcaseVideos = [
   ...Array.from({ length: 6 }, (_, index) => {
@@ -39,7 +41,8 @@ const showcaseVideos = [
       category: "Welcome System",
       number: `DEMO ${number}`,
       title: "Welcome System",
-      description: "Click to watch this community welcome system demonstration.",
+      description:
+        "Click to watch this community welcome system demonstration.",
       video: `/videos/welcome-video-${number}.mp4`,
     };
   }),
@@ -132,6 +135,11 @@ function getMediaType(project) {
 }
 
 function OurWork() {
+  const { language } = useLanguage();
+
+  const content =
+    ourWorkTranslations[language] || ourWorkTranslations.en;
+
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videoCategory, setVideoCategory] = useState("All Videos");
 
@@ -187,10 +195,6 @@ function OurWork() {
 
     loadProjects();
   }, []);
-
-  // =========================
-  // DATABASE VIDEO SHOWCASE
-  // =========================
 
   const databaseVideos = useMemo(() => {
     return projects
@@ -259,6 +263,46 @@ function OurWork() {
     );
   }, [projects]);
 
+  const getVideoCategoryLabel = (item) => {
+    const labels = {
+      "All Videos": content.allVideos,
+      Template: content.template,
+      Verification: content.verification,
+      "Welcome System": content.welcomeSystem,
+      "Rules System": content.rulesSystem,
+      "Roles System": content.rolesSystem,
+      "FAQ System": content.faqSystem,
+    };
+
+    return labels[item] || item;
+  };
+
+  const getProjectCategoryLabel = (item) => {
+    if (item === "All Work") {
+      return content.allWork;
+    }
+
+    return item;
+  };
+
+  const getSystemCategoryLabel = (categoryName) => {
+    const labels = {
+      Template: content.template,
+      Verification: content.verification,
+      "Welcome System": content.welcomeSystem,
+      "Rules System": content.rulesSystem,
+      "Roles System": content.rolesSystem,
+      "FAQ System": content.faqSystem,
+      "Community Structure":
+        language === "en"
+          ? "Community Structure"
+          : categoryName,
+      Other: content.other,
+    };
+
+    return labels[categoryName] || categoryName;
+  };
+
   return (
     <main className="bg-brand-field">
 
@@ -268,7 +312,7 @@ function OurWork() {
         <div className="mx-auto max-w-6xl">
 
           <p className="mb-5 text-xs font-semibold tracking-[0.24em] text-cyan">
-            SHALOMHEGA NETWORKS PORTFOLIO
+            {content.portfolioLabel}
           </p>
 
           <div className="grid gap-12 lg:grid-cols-[1.1fr_.9fr] lg:items-end">
@@ -276,13 +320,11 @@ function OurWork() {
             <div>
 
               <h1 className="max-w-3xl text-4xl font-semibold leading-tight sm:text-6xl">
-                THE WORK BEHIND THE COMMUNITY
+                {content.heroTitle}
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-7 text-ink-muted sm:text-lg">
-                Explore real community development, systems, branding, and
-                project experiences as they are added to the SHALOMHEGA NETWORKS
-                portfolio.
+                {content.heroDescription}
               </p>
 
             </div>
@@ -290,13 +332,11 @@ function OurWork() {
             <div className="rounded-2xl border border-border bg-surface/70 p-6">
 
               <p className="text-xs font-semibold tracking-[0.18em] text-purple">
-                MEDIA EXPERIENCE
+                {content.mediaExperience}
               </p>
 
               <p className="mt-3 leading-7 text-ink-muted">
-                Explore real demonstrations of community systems. Videos only
-                play when you choose to watch them, helping keep the experience
-                smooth and organized.
+                {content.mediaDescription}
               </p>
 
             </div>
@@ -317,18 +357,17 @@ function OurWork() {
             <div>
 
               <p className="text-xs font-semibold tracking-[0.22em] text-cyan">
-                COMMUNITY SYSTEM SHOWCASE
+                {content.showcaseLabel}
               </p>
 
               <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-                EXPLORE THE VIDEO WORK
+                {content.showcaseTitle}
               </h2>
 
             </div>
 
             <p className="max-w-xl text-sm leading-6 text-ink-muted">
-              Explore real examples of community systems and development work.
-              Select any video to watch the full experience.
+              {content.showcaseDescription}
             </p>
 
           </div>
@@ -346,7 +385,7 @@ function OurWork() {
                     : "border-border text-ink-muted hover:border-purple/50 hover:text-ink"
                 }`}
               >
-                {item}
+                {getVideoCategoryLabel(item)}
               </button>
 
             ))}
@@ -355,13 +394,15 @@ function OurWork() {
 
           <p className="mb-6 text-sm text-ink-muted">
 
-            Showing{" "}
+            {content.showing}{" "}
 
             <span className="font-semibold text-cyan">
               {filteredVideos.length}
             </span>{" "}
 
-            {filteredVideos.length === 1 ? "video" : "videos"}
+            {filteredVideos.length === 1
+              ? content.video
+              : content.videos}
 
           </p>
 
@@ -387,7 +428,7 @@ function OurWork() {
                   <div className="absolute inset-0 bg-black/20" />
 
                   <div className="absolute left-4 top-4 rounded-full border border-cyan/50 bg-brand-field/80 px-3 py-1 text-xs font-semibold tracking-[0.15em] text-cyan backdrop-blur">
-                    VIDEO DEMO
+                    {content.videoDemo}
                   </div>
 
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -409,7 +450,7 @@ function OurWork() {
                     </p>
 
                     <span className="text-xs font-semibold tracking-[0.14em] text-purple">
-                      {video.category.toUpperCase()}
+                      {getSystemCategoryLabel(video.category).toUpperCase()}
                     </span>
 
                   </div>
@@ -445,19 +486,17 @@ function OurWork() {
             <div>
 
               <p className="text-xs font-semibold tracking-[0.22em] text-cyan">
-                PROJECT SHOWCASE
+                {content.projectShowcase}
               </p>
 
               <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-                EXPLORE THE PORTFOLIO
+                {content.portfolioTitle}
               </h2>
 
             </div>
 
             <p className="max-w-xl text-sm leading-6 text-ink-muted">
-              Explore real community development, branding, systems, and
-              project work published directly from the SHALOMHEGA NETWORKS
-              portfolio.
+              {content.portfolioDescription}
             </p>
 
           </div>
@@ -475,7 +514,7 @@ function OurWork() {
                     : "border-border text-ink-muted hover:border-purple/50 hover:text-ink"
                 }`}
               >
-                {item}
+                {getProjectCategoryLabel(item)}
               </button>
 
             ))}
@@ -487,11 +526,11 @@ function OurWork() {
             <div className="rounded-3xl border border-border bg-surface/60 p-10 text-center">
 
               <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
-                LOADING PORTFOLIO
+                {content.loadingPortfolio}
               </p>
 
               <p className="mt-3 text-ink-muted">
-                Loading the latest published projects...
+                {content.loadingProjects}
               </p>
 
             </div>
@@ -503,11 +542,11 @@ function OurWork() {
             <div className="rounded-3xl border border-red-500/30 bg-surface/60 p-10 text-center">
 
               <p className="text-xs font-semibold tracking-[0.2em] text-purple">
-                PORTFOLIO UNAVAILABLE
+                {content.portfolioUnavailable}
               </p>
 
               <p className="mt-3 text-ink-muted">
-                {projectsError}
+                {content.portfolioError}
               </p>
 
             </div>
@@ -559,7 +598,7 @@ function OurWork() {
                         {!mediaUrl && (
 
                           <div className="flex h-full w-full items-center justify-center text-sm text-ink-muted">
-                            PROJECT MEDIA
+                            {content.projectMedia}
                           </div>
 
                         )}
@@ -569,8 +608,8 @@ function OurWork() {
                         <div className="absolute left-4 top-4 rounded-full border border-cyan/50 bg-brand-field/80 px-3 py-1 text-xs font-semibold tracking-[0.15em] text-cyan backdrop-blur">
 
                           {mediaType === "video"
-                            ? "VIDEO PROJECT"
-                            : "PROJECT MEDIA"}
+                            ? content.videoProject
+                            : content.projectMedia}
 
                         </div>
 
@@ -591,11 +630,11 @@ function OurWork() {
                         <div className="flex items-center justify-between gap-4">
 
                           <p className="text-xs font-semibold tracking-[0.18em] text-cyan">
-                            PROJECT
+                            {content.project}
                           </p>
 
                           <span className="text-xs font-semibold tracking-[0.14em] text-purple">
-                            {(project.category || "Portfolio").toUpperCase()}
+                            {(project.category || content.portfolioCategory).toUpperCase()}
                           </span>
 
                         </div>
@@ -634,7 +673,7 @@ function OurWork() {
                   <div className="flex min-h-[280px] items-center justify-center rounded-2xl border border-dashed border-border bg-brand-field/30">
 
                     <p className="text-center text-xs font-semibold tracking-[0.2em] text-ink-muted">
-                      REAL PROJECT MEDIA WILL APPEAR HERE
+                      {content.realProjectMedia}
                     </p>
 
                   </div>
@@ -642,18 +681,18 @@ function OurWork() {
                   <div>
 
                     <p className="text-xs font-semibold tracking-[0.2em] text-purple">
-                      PORTFOLIO IN PROGRESS
+                      {content.portfolioInProgress}
                     </p>
 
                     <h3 className="mt-3 text-2xl font-semibold sm:text-3xl">
-                      REAL WORK DESERVES A REAL SHOWCASE
+                      {content.realWorkTitle}
                     </h3>
 
                     <p className="mt-4 max-w-xl leading-7 text-ink-muted">
 
                       {category === "All Work"
-                        ? "New published projects from the SHALOMHEGA NETWORKS portfolio will automatically appear here."
-                        : `No published projects are currently available under ${category}.`}
+                        ? content.newProjects
+                        : `${content.noProjects} ${category}.`}
 
                     </p>
 
@@ -678,18 +717,18 @@ function OurWork() {
           {[
             [
               "01",
-              "WATCH REAL SYSTEMS",
-              "Explore demonstrations of real community systems and development work.",
+              content.watchSystems,
+              content.watchSystemsText,
             ],
             [
               "02",
-              "PLAY WHEN READY",
-              "Videos are not forced to autoplay. Visitors choose what they want to watch.",
+              content.playWhenReady,
+              content.playWhenReadyText,
             ],
             [
               "03",
-              "MORE WORK COMING",
-              "New published portfolio projects automatically appear as the work continues to grow.",
+              content.moreWork,
+              content.moreWorkText,
             ],
           ].map(([number, title, text]) => (
 
@@ -725,23 +764,22 @@ function OurWork() {
         <div className="mx-auto max-w-2xl">
 
           <p className="text-xs font-semibold tracking-[0.22em] text-cyan">
-            HAVE A PROJECT IN MIND
+            {content.projectLabel}
           </p>
 
           <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">
-            LET'S TALK ABOUT WHAT YOU WANT TO BUILD
+            {content.projectTitle}
           </h2>
 
           <p className="mt-5 leading-7 text-ink-muted">
-            Start with your direction, and we can explore the right development
-            approach for your community.
+            {content.projectDescription}
           </p>
 
           <Link
             to="/start-your-project"
             className="mt-8 inline-flex rounded-full bg-purple px-6 py-3 text-sm font-semibold text-ink transition hover:bg-blue"
           >
-            START YOUR PROJECT
+            {content.startProject}
           </Link>
 
         </div>
@@ -759,7 +797,7 @@ function OurWork() {
             className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-6 py-3 text-sm font-semibold tracking-[0.08em] text-ink-muted transition hover:border-cyan hover:bg-cyan/10 hover:text-cyan"
           >
             <span aria-hidden="true">🔐</span>
-            ADMIN ACCESS
+            {content.adminAccess}
           </Link>
 
         </div>
@@ -783,7 +821,7 @@ function OurWork() {
             <button
               onClick={() => setSelectedVideo(null)}
               className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
-              aria-label="Close video"
+              aria-label={content.closeVideo}
             >
               ×
             </button>
@@ -791,11 +829,11 @@ function OurWork() {
             <div className="mb-4 shrink-0 pr-12">
 
               <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
-                {selectedVideo.category.toUpperCase()}
+                {getSystemCategoryLabel(selectedVideo.category).toUpperCase()}
               </p>
 
               <h2 className="mt-2 text-2xl font-semibold">
-                {selectedVideo.title} — {selectedVideo.number}
+                {selectedVideo.title} · {selectedVideo.number}
               </h2>
 
             </div>
@@ -815,7 +853,7 @@ function OurWork() {
                   type="video/mp4"
                 />
 
-                Your browser does not support the video tag.
+                {content.browserVideo}
 
               </video>
 
@@ -844,7 +882,7 @@ function OurWork() {
             <button
               onClick={() => setSelectedProject(null)}
               className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-xl text-white transition hover:bg-black"
-              aria-label="Close project"
+              aria-label={content.closeProject}
             >
               ×
             </button>
@@ -852,7 +890,7 @@ function OurWork() {
             <div className="mb-4 shrink-0 pr-12">
 
               <p className="text-xs font-semibold tracking-[0.2em] text-cyan">
-                {(selectedProject.category || "Portfolio").toUpperCase()}
+                {(selectedProject.category || content.portfolioCategory).toUpperCase()}
               </p>
 
               <h2 className="mt-2 text-2xl font-semibold">
@@ -886,7 +924,7 @@ function OurWork() {
                     type="video/mp4"
                   />
 
-                  Your browser does not support the video tag.
+                  {content.browserVideo}
 
                 </video>
 
