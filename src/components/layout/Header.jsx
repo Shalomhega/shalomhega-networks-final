@@ -67,7 +67,7 @@ function LanguageSelector({ mobile = false, onSelect }) {
   } = useLanguage();
 
   return (
-    <div className={mobile ? "w-full" : "relative"}>
+    <div className={mobile ? "w-full" : "relative shrink-0"}>
       <div className="relative">
         <select
           value={language}
@@ -141,30 +141,34 @@ function Header() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-xl">
-      <div className="mx-auto flex h-[72px] max-w-7xl items-center gap-4 px-4 sm:px-6">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
+      <div className="mx-auto flex h-[78px] max-w-7xl items-center gap-6 px-4 sm:px-6 lg:gap-8">
+        {/* Brand */}
         <Link
           to="/"
           onClick={closeMenu}
-          className="flex shrink-0 items-center"
+          className="relative flex h-full w-[220px] shrink-0 items-center sm:w-[250px]"
           aria-label="SHALOMHEGA NETWORKS Home"
         >
+          <div className="absolute inset-y-3 left-0 w-[210px] rounded-full bg-cyan/10 blur-2xl sm:w-[235px]" />
+
           <img
             src="/images/shalomhega-logo.png"
             alt="SHALOMHEGA NETWORKS"
-            className="h-auto w-[155px] object-contain sm:w-[180px]"
+            className="relative z-10 h-auto w-[210px] object-contain brightness-110 contrast-110 drop-shadow-[0_0_12px_rgba(34,211,238,0.35)] transition-transform duration-300 hover:scale-[1.03] sm:w-[235px]"
           />
         </Link>
 
+        {/* Desktop navigation */}
         <div className="hidden min-w-0 flex-1 lg:block">
-          <nav className="flex items-center justify-end gap-1">
+          <nav className="flex min-w-0 items-center justify-end gap-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {primaryLinks.map(({ path, label }) => (
               <NavLink
                 key={path}
                 to={path}
                 end={path === "/"}
                 className={({ isActive }) =>
-                  `whitespace-nowrap rounded-lg px-2.5 py-2 text-xs font-medium transition-all duration-200 xl:px-3 xl:text-sm ${
+                  `shrink-0 whitespace-nowrap rounded-lg px-2 py-2 text-[11px] font-medium transition-all duration-200 xl:px-2.5 xl:text-xs ${
                     isActive
                       ? "bg-surface text-cyan"
                       : "text-ink-muted hover:bg-surface/70 hover:text-ink"
@@ -180,7 +184,7 @@ function Header() {
             {ctaLink && (
               <NavLink
                 to={ctaLink.path}
-                className="ml-1 shrink-0 rounded-full bg-purple px-3.5 py-2 text-xs font-semibold text-ink transition-all duration-200 hover:bg-blue hover:shadow-lg hover:shadow-purple/20 xl:px-4 xl:text-sm"
+                className="ml-1 shrink-0 whitespace-nowrap rounded-full bg-purple px-3 py-2 text-[11px] font-semibold text-ink transition-all duration-200 hover:bg-blue hover:shadow-lg hover:shadow-purple/20 xl:px-3.5 xl:text-xs"
               >
                 {getNavLabel(ctaLink.label, language)}
               </NavLink>
@@ -188,6 +192,7 @@ function Header() {
           </nav>
         </div>
 
+        {/* Mobile menu button */}
         <button
           type="button"
           onClick={() => setMenuOpen((prev) => !prev)}
@@ -199,6 +204,7 @@ function Header() {
         </button>
       </div>
 
+      {/* Mobile navigation */}
       {menuOpen && (
         <nav className="border-t border-border bg-background/95 px-4 pb-5 pt-3 backdrop-blur-xl sm:px-6 lg:hidden">
           <ul className="flex max-h-[70vh] flex-col gap-1 overflow-y-auto">
