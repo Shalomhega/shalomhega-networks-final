@@ -6,7 +6,6 @@ import {
   Container,
   Section,
   SectionHeading,
-  GlowOrb,
 } from "../components/ui";
 
 function Arrow() {
@@ -20,9 +19,9 @@ function Arrow() {
   );
 }
 
-function NetworkVisual() {
+function HeroNetworkVisual() {
   return (
-    <div className="relative mx-auto flex min-h-[420px] w-full max-w-[620px] items-center justify-center overflow-hidden sm:min-h-[500px]">
+    <div className="relative mx-auto w-full max-w-[620px]">
       <style>{`
         @keyframes shalomOrbit {
           from {
@@ -42,258 +41,293 @@ function NetworkVisual() {
           }
         }
 
-        @keyframes shalomElectric {
-          0%, 100% {
-            stroke-dashoffset: 900;
-            opacity: 0.12;
-          }
-
-          40% {
-            opacity: 0.65;
-          }
-
-          52% {
+        @keyframes shalomPulse {
+          0%,
+          100% {
+            transform: scale(0.98);
             opacity: 0.8;
           }
 
-          70% {
-            stroke-dashoffset: 0;
-            opacity: 0.18;
+          50% {
+            transform: scale(1.02);
+            opacity: 1;
           }
         }
 
-        @keyframes shalomPulse {
-          0%, 100% {
-            transform: scale(0.94);
-            opacity: 0.2;
+        @keyframes shalomGlow {
+          0%,
+          100% {
+            opacity: 0.35;
           }
 
           50% {
-            transform: scale(1.04);
-            opacity: 0.5;
+            opacity: 0.8;
+          }
+        }
+
+        @keyframes shalomLightSweep {
+          0% {
+            transform: translateX(-120%);
+            opacity: 0;
+          }
+
+          20% {
+            opacity: 0.4;
+          }
+
+          50% {
+            opacity: 0.7;
+          }
+
+          80% {
+            opacity: 0.4;
+          }
+
+          100% {
+            transform: translateX(120%);
+            opacity: 0;
           }
         }
 
         .shalom-orbit {
-          animation: shalomOrbit 18s linear infinite;
+          animation: shalomOrbit 22s linear infinite;
           transform-origin: center;
         }
 
         .shalom-orbit-reverse {
-          animation: shalomOrbitReverse 24s linear infinite;
+          animation: shalomOrbitReverse 30s linear infinite;
           transform-origin: center;
         }
 
-        .shalom-electric {
-          stroke-dasharray: 120 780;
-          animation: shalomElectric 7s ease-in-out infinite;
-        }
-
-        .shalom-electric-delay {
-          animation-delay: 2.4s;
-        }
-
-        .shalom-electric-delay-two {
-          animation-delay: 4.5s;
-        }
-
-        .shalom-logo-glow {
-          animation: shalomPulse 5s ease-in-out infinite;
+        .shalom-logo-pulse {
+          animation: shalomPulse 6s ease-in-out infinite;
           transform-origin: center;
+        }
+
+        .shalom-glow {
+          animation: shalomGlow 5s ease-in-out infinite;
+        }
+
+        .shalom-light-sweep {
+          animation: shalomLightSweep 8s ease-in-out infinite;
         }
 
         @media (prefers-reduced-motion: reduce) {
           .shalom-orbit,
           .shalom-orbit-reverse,
-          .shalom-electric,
-          .shalom-electric-delay,
-          .shalom-electric-delay-two,
-          .shalom-logo-glow {
+          .shalom-logo-pulse,
+          .shalom-glow,
+          .shalom-light-sweep {
             animation: none;
           }
         }
       `}</style>
 
-      {/* Ambient glow */}
-      <div className="absolute left-1/2 top-1/2 h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400/10 blur-[90px]" />
+      {/* Light display surface */}
+      <div className="relative min-h-[540px] overflow-hidden rounded-[2.5rem] border border-slate-200/80 bg-gradient-to-br from-white via-slate-50 to-blue-50 px-5 py-8 shadow-[0_35px_100px_rgba(37,99,235,0.14)] sm:min-h-[620px] sm:px-8 sm:py-10">
+        {/* Ambient light */}
+        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[460px] w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-300/20 blur-[120px]" />
 
-      <div className="absolute left-1/2 top-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-[100px]" />
+        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-400/15 blur-[100px]" />
 
-      <div className="absolute left-1/2 top-1/2 h-[230px] w-[230px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-500/15 blur-[75px]" />
+        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-400/15 blur-[90px]" />
 
-      {/* Orbital network */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <svg
-          viewBox="0 0 600 600"
-          className="h-full w-full max-w-[600px]"
+        {/* Technical grid */}
+        <div
           aria-hidden="true"
-        >
-          <defs>
-            <linearGradient
-              id="shalomOrbitGradient"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="100%"
-            >
-              <stop offset="0%" stopColor="#22d3ee" />
-              <stop offset="45%" stopColor="#3b82f6" />
-              <stop offset="100%" stopColor="#a855f7" />
-            </linearGradient>
+          className="pointer-events-none absolute inset-0 opacity-60"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(37,99,235,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.045) 1px, transparent 1px)",
+            backgroundSize: "44px 44px",
+            maskImage:
+              "radial-gradient(circle at center, black 15%, transparent 76%)",
+            WebkitMaskImage:
+              "radial-gradient(circle at center, black 15%, transparent 76%)",
+          }}
+        />
 
-            <linearGradient
-              id="shalomElectricGradient"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="0%"
-            >
-              <stop offset="0%" stopColor="#22d3ee" stopOpacity="0" />
-              <stop offset="35%" stopColor="#22d3ee" />
-              <stop offset="65%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
-            </linearGradient>
-
-            <filter id="shalomGlow">
-              <feGaussianBlur stdDeviation="5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
-          {/* Main horizontal orbit */}
-          <g className="shalom-orbit">
-            <ellipse
-              cx="300"
-              cy="300"
-              rx="225"
-              ry="115"
-              fill="none"
-              stroke="url(#shalomOrbitGradient)"
-              strokeWidth="1.4"
-              opacity="0.42"
-            />
-
-            <ellipse
-              cx="300"
-              cy="300"
-              rx="245"
-              ry="128"
-              fill="none"
-              stroke="url(#shalomOrbitGradient)"
-              strokeWidth="0.7"
-              opacity="0.2"
-            />
-
-            <circle
-              cx="525"
-              cy="300"
-              r="4"
-              fill="#22d3ee"
-              filter="url(#shalomGlow)"
-            />
-
-            <circle
-              cx="75"
-              cy="300"
-              r="3"
-              fill="#a855f7"
-              filter="url(#shalomGlow)"
-            />
-          </g>
-
-          {/* Vertical orbit */}
-          <g className="shalom-orbit-reverse">
-            <ellipse
-              cx="300"
-              cy="300"
-              rx="180"
-              ry="235"
-              fill="none"
-              stroke="url(#shalomOrbitGradient)"
-              strokeWidth="0.8"
-              opacity="0.22"
-            />
-
-            <circle
-              cx="300"
-              cy="65"
-              r="3"
-              fill="#60a5fa"
-              filter="url(#shalomGlow)"
-            />
-          </g>
-
-          {/* Electric traveling paths */}
-          <ellipse
-            cx="300"
-            cy="300"
-            rx="225"
-            ry="115"
-            fill="none"
-            stroke="url(#shalomElectricGradient)"
-            strokeWidth="2"
-            className="shalom-electric"
-          />
-
-          <ellipse
-            cx="300"
-            cy="300"
-            rx="180"
-            ry="235"
-            fill="none"
-            stroke="url(#shalomElectricGradient)"
-            strokeWidth="1.5"
-            className="shalom-electric shalom-electric-delay"
-          />
-
-          <ellipse
-            cx="300"
-            cy="300"
-            rx="245"
-            ry="128"
-            fill="none"
-            stroke="url(#shalomElectricGradient)"
-            strokeWidth="1"
-            className="shalom-electric shalom-electric-delay-two"
-          />
-        </svg>
-      </div>
-
-      {/* Center SHALOMHEGA logo */}
-      <div className="shalom-logo-glow relative z-20 flex items-center justify-center">
-        <div className="absolute h-[205px] w-[205px] rounded-full bg-cyan-400/10 blur-[45px] sm:h-[250px] sm:w-[250px]" />
-
-        <div className="relative flex h-[210px] w-[210px] items-center justify-center rounded-full border border-cyan-300/20 bg-[#070a18]/75 p-5 shadow-[0_0_80px_rgba(59,130,246,0.22)] backdrop-blur-sm sm:h-[260px] sm:w-[260px] sm:p-7">
-          <div className="absolute inset-3 rounded-full border border-purple-400/15" />
-
-          <div className="absolute inset-6 rounded-full border border-blue-400/10" />
-
-          <img
-            src="/images/NETWORKIMAGE.png"
-            alt="SHALOMHEGA NETWORKS"
-            className="relative z-10 max-h-[155px] max-w-[180px] object-contain drop-shadow-[0_0_28px_rgba(34,211,238,0.35)] sm:max-h-[195px] sm:max-w-[225px]"
-          />
+        {/* Top label */}
+        <div className="absolute left-6 top-6 z-30 flex items-center gap-2 rounded-full border border-cyan-200 bg-white/90 px-3 py-2 shadow-[0_10px_30px_rgba(6,182,212,0.10)] backdrop-blur-md sm:left-8 sm:top-8">
+          <span className="h-2 w-2 rounded-full bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.65)]" />
+          <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-cyan-700">
+            SHALOMHEGA NETWORKS
+          </span>
         </div>
-      </div>
 
-      {/* Floating system labels */}
-      <div className="absolute left-[4%] top-[23%] rounded-full border border-cyan-400/15 bg-[#080b18]/70 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-cyan-200/70 backdrop-blur-md">
-        Connected
-      </div>
+        {/* Orbital system */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <svg
+            viewBox="0 0 700 700"
+            className="h-full w-full"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient
+                id="shalomLightGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop offset="0%" stopColor="#06b6d4" />
+                <stop offset="48%" stopColor="#2563eb" />
+                <stop offset="100%" stopColor="#9333ea" />
+              </linearGradient>
+            </defs>
 
-      <div className="absolute right-[3%] top-[31%] rounded-full border border-purple-400/15 bg-[#080b18]/70 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-purple-200/70 backdrop-blur-md">
-        Community
-      </div>
+            <g className="shalom-orbit">
+              <ellipse
+                cx="350"
+                cy="350"
+                rx="280"
+                ry="150"
+                fill="none"
+                stroke="url(#shalomLightGradient)"
+                strokeWidth="1.5"
+                opacity="0.28"
+              />
 
-      <div className="absolute bottom-[19%] left-[13%] rounded-full border border-blue-400/15 bg-[#080b18]/70 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-blue-200/70 backdrop-blur-md">
-        Systems
-      </div>
+              <ellipse
+                cx="350"
+                cy="350"
+                rx="315"
+                ry="170"
+                fill="none"
+                stroke="url(#shalomLightGradient)"
+                strokeWidth="0.8"
+                opacity="0.12"
+              />
 
-      <div className="absolute bottom-[14%] right-[13%] rounded-full border border-cyan-400/15 bg-[#080b18]/70 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-cyan-200/70 backdrop-blur-md">
-        Built to grow
+              <circle
+                cx="630"
+                cy="350"
+                r="5"
+                fill="#06b6d4"
+                className="shalom-glow"
+              />
+
+              <circle
+                cx="70"
+                cy="350"
+                r="4"
+                fill="#9333ea"
+                className="shalom-glow"
+              />
+            </g>
+
+            <g className="shalom-orbit-reverse">
+              <ellipse
+                cx="350"
+                cy="350"
+                rx="210"
+                ry="285"
+                fill="none"
+                stroke="url(#shalomLightGradient)"
+                strokeWidth="1"
+                opacity="0.16"
+              />
+
+              <circle
+                cx="350"
+                cy="65"
+                r="4"
+                fill="#2563eb"
+                className="shalom-glow"
+              />
+
+              <circle
+                cx="350"
+                cy="635"
+                r="4"
+                fill="#9333ea"
+                className="shalom-glow"
+              />
+            </g>
+          </svg>
+        </div>
+
+        {/* Central logo */}
+        <div className="absolute inset-x-5 top-1/2 z-20 flex -translate-y-1/2 items-center justify-center sm:inset-x-8">
+          <div className="absolute h-[350px] w-[350px] rounded-full bg-white/85 shadow-[0_0_100px_rgba(37,99,235,0.18)] blur-3xl sm:h-[430px] sm:w-[430px]" />
+
+          <div className="shalom-logo-pulse relative flex w-full items-center justify-center">
+            <img
+              src="/images/shalomhega-home-logo.png"
+              alt="SHALOMHEGA NETWORKS"
+              className="relative z-10 h-auto w-[430px] max-w-full object-contain drop-shadow-[0_18px_38px_rgba(37,99,235,0.28)] sm:w-[530px]"
+            />
+
+            {/* Soft light sweep */}
+            <span
+              aria-hidden="true"
+              className="shalom-light-sweep pointer-events-none absolute left-1/2 top-1/2 z-20 h-[65%] w-[12%] -translate-x-1/2 -translate-y-1/2 rotate-[25deg] bg-gradient-to-r from-transparent via-white/60 to-transparent blur-xl"
+            />
+          </div>
+        </div>
+
+        {/* Connected */}
+        <div className="absolute left-5 top-24 z-30 rounded-2xl border border-cyan-200 bg-white/95 px-4 py-3 shadow-[0_14px_35px_rgba(6,182,212,0.12)] backdrop-blur-md sm:left-8 sm:top-28">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-600">
+            Connected
+          </p>
+
+          <p className="mt-1 text-xs font-medium text-slate-600">
+            People • Ideas • Communities
+          </p>
+        </div>
+
+        {/* Community */}
+        <div className="absolute right-5 top-28 z-30 rounded-2xl border border-purple-200 bg-white/95 px-4 py-3 shadow-[0_14px_35px_rgba(147,51,234,0.12)] backdrop-blur-md sm:right-8 sm:top-32">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-purple-600">
+            Community
+          </p>
+
+          <p className="mt-1 text-xs font-medium text-slate-600">
+            Built around your vision
+          </p>
+        </div>
+
+        {/* Systems */}
+        <div className="absolute bottom-24 left-5 z-30 rounded-2xl border border-blue-200 bg-white/95 px-4 py-3 shadow-[0_14px_35px_rgba(37,99,235,0.12)] backdrop-blur-md sm:bottom-28 sm:left-8">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600">
+            Systems
+          </p>
+
+          <p className="mt-1 text-xs font-medium text-slate-600">
+            Modern tools for growth
+          </p>
+        </div>
+
+        {/* Built to Grow */}
+        <div className="absolute bottom-10 right-5 z-30 rounded-2xl border border-purple-200 bg-white/95 px-4 py-3 shadow-[0_14px_35px_rgba(147,51,234,0.12)] backdrop-blur-md sm:bottom-14 sm:right-8">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-purple-600">
+            Built to Grow
+          </p>
+
+          <p className="mt-1 text-xs font-medium text-slate-600">
+            Scalable solutions
+          </p>
+        </div>
+
+        {/* Bottom feature strip */}
+        <div className="absolute bottom-2 left-1/2 z-30 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-blue-100 bg-white/90 px-4 py-2 shadow-lg backdrop-blur-md sm:flex">
+          <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-blue-600">
+            Community Platforms
+          </span>
+
+          <span className="text-blue-300">•</span>
+
+          <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-purple-600">
+            Custom Systems
+          </span>
+
+          <span className="text-purple-300">•</span>
+
+          <span className="text-[8px] font-bold uppercase tracking-[0.16em] text-cyan-600">
+            Real Growth
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -307,43 +341,44 @@ function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate overflow-hidden border-b border-white/[0.06]">
-        <GlowOrb className="-left-40 top-16 h-[28rem] w-[28rem] bg-purple/20 blur-3xl" />
-
-        <GlowOrb className="right-[-8rem] top-[-6rem] h-[30rem] w-[30rem] bg-blue/15 blur-3xl" />
-
-        <GlowOrb className="left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 bg-cyan/5 blur-3xl" />
-
+      <section className="relative isolate overflow-hidden border-b border-slate-200/70 bg-gradient-to-br from-white via-slate-50 to-blue-50">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-30"
+          className="pointer-events-none absolute inset-0 opacity-70"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
+              "linear-gradient(rgba(37,99,235,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.035) 1px, transparent 1px)",
             backgroundSize: "72px 72px",
-            maskImage: "linear-gradient(to bottom, black, transparent 85%)",
+            maskImage:
+              "linear-gradient(to bottom, black, transparent 88%)",
             WebkitMaskImage:
-              "linear-gradient(to bottom, black, transparent 85%)",
+              "linear-gradient(to bottom, black, transparent 88%)",
           }}
         />
 
-        <Container className="relative py-24 sm:py-32 lg:py-36">
-          <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+        <div className="pointer-events-none absolute -left-32 top-20 h-[28rem] w-[28rem] rounded-full bg-purple-300/20 blur-[110px]" />
+
+        <div className="pointer-events-none absolute right-[-10rem] top-[-8rem] h-[32rem] w-[32rem] rounded-full bg-blue-300/20 blur-[120px]" />
+
+        <div className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-200/20 blur-[100px]" />
+
+        <Container className="relative py-20 sm:py-28 lg:py-32">
+          <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
             <div className="max-w-4xl">
-              <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-cyan/20 bg-cyan/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan shadow-[0_0_30px_rgba(0,229,255,0.06)]">
+              <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700 shadow-[0_10px_30px_rgba(6,182,212,0.08)] backdrop-blur-md">
                 <span
                   aria-hidden="true"
-                  className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_10px_rgba(0,229,255,0.8)]"
+                  className="h-1.5 w-1.5 rounded-full bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)]"
                 />
 
                 {content.heroBadge}
               </div>
 
-              <h1 className="max-w-5xl font-heading text-4xl font-bold leading-[1.04] tracking-[-0.03em] text-ink sm:text-6xl lg:text-7xl xl:text-8xl">
+              <h1 className="max-w-5xl font-heading text-4xl font-bold leading-[1.04] tracking-[-0.03em] text-slate-950 sm:text-6xl lg:text-7xl xl:text-8xl">
                 {content.heroTitle}
               </h1>
 
-              <p className="mt-8 max-w-2xl text-base leading-8 text-ink-muted sm:text-lg">
+              <p className="mt-8 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
                 {content.heroDescription}
               </p>
 
@@ -365,16 +400,16 @@ function Home() {
                 {content.highlights.map(([title, text]) => (
                   <div
                     key={title}
-                    className="relative border-l border-white/[0.12] pl-4"
+                    className="relative border-l border-slate-300 pl-4"
                   >
                     <span
                       aria-hidden="true"
-                      className="absolute -left-px top-0 h-8 w-px bg-gradient-to-b from-cyan to-transparent"
+                      className="absolute -left-px top-0 h-8 w-px bg-gradient-to-b from-cyan-500 to-transparent"
                     />
 
-                    <p className="font-semibold text-ink">{title}</p>
+                    <p className="font-semibold text-slate-950">{title}</p>
 
-                    <p className="mt-1 text-sm leading-6 text-ink-muted">
+                    <p className="mt-1 text-sm leading-6 text-slate-600">
                       {text}
                     </p>
                   </div>
@@ -382,8 +417,7 @@ function Home() {
               </div>
             </div>
 
-            {/* Network visual */}
-            <NetworkVisual />
+            <HeroNetworkVisual />
           </div>
         </Container>
       </section>
@@ -430,8 +464,6 @@ function Home() {
 
       {/* Why Us */}
       <Section className="relative overflow-hidden border-y border-white/[0.06] bg-surface/40">
-        <GlowOrb className="-right-40 top-1/2 h-80 w-80 -translate-y-1/2 bg-blue/10 blur-3xl" />
-
         <Container className="relative grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-purple">
@@ -475,7 +507,7 @@ function Home() {
           />
 
           <div className="relative mx-auto mt-12 max-w-4xl overflow-hidden rounded-[2rem] border border-purple/25 bg-gradient-to-br from-purple/10 via-blue/10 to-cyan/10 px-7 py-12 text-center shadow-[0_30px_100px_rgba(76,59,255,0.12)] sm:px-14 sm:py-14">
-            <GlowOrb className="left-1/2 top-0 h-56 w-56 -translate-x-1/2 bg-purple/10 blur-3xl" />
+            <div className="absolute left-1/2 top-0 h-56 w-56 -translate-x-1/2 rounded-full bg-purple/10 blur-3xl" />
 
             <div className="relative">
               <p className="font-heading text-3xl font-bold tracking-tight sm:text-5xl">
@@ -675,9 +707,9 @@ function Home() {
 
       {/* Final CTA */}
       <section className="relative overflow-hidden border-t border-white/[0.06] py-24 sm:py-32">
-        <GlowOrb className="left-1/2 top-0 h-[30rem] w-[30rem] -translate-x-1/2 bg-purple/20 blur-3xl" />
+        <div className="absolute left-1/2 top-0 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-purple/20 blur-3xl" />
 
-        <GlowOrb className="left-1/4 bottom-0 h-64 w-64 bg-blue/10 blur-3xl" />
+        <div className="absolute bottom-0 left-1/4 h-64 w-64 rounded-full bg-blue/10 blur-3xl" />
 
         <Container className="relative text-center">
           <div className="mx-auto max-w-4xl">
