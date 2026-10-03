@@ -22,87 +22,278 @@ function Arrow() {
 
 function NetworkVisual() {
   return (
-    <div className="relative mx-auto w-full max-w-[560px]">
-      <div className="absolute left-1/2 top-1/2 h-[26rem] w-[26rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple/10 blur-[100px]" />
+    <div className="relative mx-auto flex min-h-[420px] w-full max-w-[620px] items-center justify-center overflow-hidden sm:min-h-[500px]">
+      <style>{`
+        @keyframes shalomOrbit {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
 
-      <div className="absolute left-1/2 top-1/2 h-[20rem] w-[20rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan/10" />
+        @keyframes shalomOrbitReverse {
+          from {
+            transform: rotate(360deg);
+          }
+          to {
+            transform: rotate(0deg);
+          }
+        }
 
-      <div className="absolute left-1/2 top-1/2 h-[14rem] w-[14rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue/10" />
+        @keyframes shalomElectric {
+          0%, 100% {
+            stroke-dashoffset: 900;
+            opacity: 0.12;
+          }
 
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 600 600"
-        className="absolute inset-0 h-full w-full opacity-60"
-      >
-        <defs>
-          <linearGradient id="networkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="rgba(124,58,237,0.05)" />
-            <stop offset="50%" stopColor="rgba(59,130,246,0.65)" />
-            <stop offset="100%" stopColor="rgba(34,211,238,0.55)" />
-          </linearGradient>
-        </defs>
+          40% {
+            opacity: 0.65;
+          }
 
-        <line x1="90" y1="170" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1.5" />
-        <line x1="510" y1="150" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1.5" />
-        <line x1="105" y1="430" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1.5" />
-        <line x1="495" y1="445" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1.5" />
-        <line x1="180" y1="70" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1" />
-        <line x1="430" y1="75" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1" />
-        <line x1="170" y1="530" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1" />
-        <line x1="435" y1="525" x2="300" y2="300" stroke="url(#networkGradient)" strokeWidth="1" />
+          52% {
+            opacity: 0.8;
+          }
 
-        <circle cx="90" cy="170" r="5" fill="rgba(124,58,237,0.8)" />
-        <circle cx="510" cy="150" r="5" fill="rgba(34,211,238,0.8)" />
-        <circle cx="105" cy="430" r="5" fill="rgba(59,130,246,0.8)" />
-        <circle cx="495" cy="445" r="5" fill="rgba(124,58,237,0.8)" />
-        <circle cx="180" cy="70" r="4" fill="rgba(34,211,238,0.7)" />
-        <circle cx="430" cy="75" r="4" fill="rgba(59,130,246,0.7)" />
-        <circle cx="170" cy="530" r="4" fill="rgba(34,211,238,0.7)" />
-        <circle cx="435" cy="525" r="4" fill="rgba(124,58,237,0.7)" />
-      </svg>
+          70% {
+            stroke-dashoffset: 0;
+            opacity: 0.18;
+          }
+        }
 
-      <div className="relative flex aspect-square items-center justify-center">
-        <div className="absolute h-[15rem] w-[15rem] rounded-full bg-purple/10 blur-3xl" />
+        @keyframes shalomPulse {
+          0%, 100% {
+            transform: scale(0.94);
+            opacity: 0.2;
+          }
 
-        <div className="relative flex h-[15rem] w-[15rem] items-center justify-center rounded-full border border-white/[0.10] bg-surface/75 p-8 shadow-[0_30px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:h-[18rem] sm:w-[18rem] sm:p-10">
-          <div className="absolute inset-4 rounded-full border border-cyan/10" />
+          50% {
+            transform: scale(1.04);
+            opacity: 0.5;
+          }
+        }
 
-          <div className="absolute inset-8 rounded-full border border-purple/10" />
+        .shalom-orbit {
+          animation: shalomOrbit 18s linear infinite;
+          transform-origin: center;
+        }
 
-          <img
-            src="/images/Shalomnetwork.png"
-            alt="SHALOMHEGA NETWORKS"
-            className="relative z-10 max-h-[8rem] max-w-[11rem] object-contain drop-shadow-[0_0_35px_rgba(34,211,238,0.18)] sm:max-h-[10rem] sm:max-w-[13rem]"
+        .shalom-orbit-reverse {
+          animation: shalomOrbitReverse 24s linear infinite;
+          transform-origin: center;
+        }
+
+        .shalom-electric {
+          stroke-dasharray: 120 780;
+          animation: shalomElectric 7s ease-in-out infinite;
+        }
+
+        .shalom-electric-delay {
+          animation-delay: 2.4s;
+        }
+
+        .shalom-electric-delay-two {
+          animation-delay: 4.5s;
+        }
+
+        .shalom-logo-glow {
+          animation: shalomPulse 5s ease-in-out infinite;
+          transform-origin: center;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .shalom-orbit,
+          .shalom-orbit-reverse,
+          .shalom-electric,
+          .shalom-electric-delay,
+          .shalom-electric-delay-two,
+          .shalom-logo-glow {
+            animation: none;
+          }
+        }
+      `}</style>
+
+      {/* Ambient glow */}
+      <div className="absolute left-1/2 top-1/2 h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400/10 blur-[90px]" />
+
+      <div className="absolute left-1/2 top-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-[100px]" />
+
+      <div className="absolute left-1/2 top-1/2 h-[230px] w-[230px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-500/15 blur-[75px]" />
+
+      {/* Orbital network */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <svg
+          viewBox="0 0 600 600"
+          className="h-full w-full max-w-[600px]"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient
+              id="shalomOrbitGradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" stopColor="#22d3ee" />
+              <stop offset="45%" stopColor="#3b82f6" />
+              <stop offset="100%" stopColor="#a855f7" />
+            </linearGradient>
+
+            <linearGradient
+              id="shalomElectricGradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="0%"
+            >
+              <stop offset="0%" stopColor="#22d3ee" stopOpacity="0" />
+              <stop offset="35%" stopColor="#22d3ee" />
+              <stop offset="65%" stopColor="#8b5cf6" />
+              <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
+            </linearGradient>
+
+            <filter id="shalomGlow">
+              <feGaussianBlur stdDeviation="5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          {/* Main horizontal orbit */}
+          <g className="shalom-orbit">
+            <ellipse
+              cx="300"
+              cy="300"
+              rx="225"
+              ry="115"
+              fill="none"
+              stroke="url(#shalomOrbitGradient)"
+              strokeWidth="1.4"
+              opacity="0.42"
+            />
+
+            <ellipse
+              cx="300"
+              cy="300"
+              rx="245"
+              ry="128"
+              fill="none"
+              stroke="url(#shalomOrbitGradient)"
+              strokeWidth="0.7"
+              opacity="0.2"
+            />
+
+            <circle
+              cx="525"
+              cy="300"
+              r="4"
+              fill="#22d3ee"
+              filter="url(#shalomGlow)"
+            />
+
+            <circle
+              cx="75"
+              cy="300"
+              r="3"
+              fill="#a855f7"
+              filter="url(#shalomGlow)"
+            />
+          </g>
+
+          {/* Vertical orbit */}
+          <g className="shalom-orbit-reverse">
+            <ellipse
+              cx="300"
+              cy="300"
+              rx="180"
+              ry="235"
+              fill="none"
+              stroke="url(#shalomOrbitGradient)"
+              strokeWidth="0.8"
+              opacity="0.22"
+            />
+
+            <circle
+              cx="300"
+              cy="65"
+              r="3"
+              fill="#60a5fa"
+              filter="url(#shalomGlow)"
+            />
+          </g>
+
+          {/* Electric traveling paths */}
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="225"
+            ry="115"
+            fill="none"
+            stroke="url(#shalomElectricGradient)"
+            strokeWidth="2"
+            className="shalom-electric"
           />
 
-          <span className="absolute right-5 top-5 h-2.5 w-2.5 rounded-full bg-cyan shadow-[0_0_18px_rgba(34,211,238,0.9)]" />
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="180"
+            ry="235"
+            fill="none"
+            stroke="url(#shalomElectricGradient)"
+            strokeWidth="1.5"
+            className="shalom-electric shalom-electric-delay"
+          />
 
-          <span className="absolute bottom-8 left-6 h-2 w-2 rounded-full bg-purple shadow-[0_0_15px_rgba(124,58,237,0.9)]" />
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="245"
+            ry="128"
+            fill="none"
+            stroke="url(#shalomElectricGradient)"
+            strokeWidth="1"
+            className="shalom-electric shalom-electric-delay-two"
+          />
+        </svg>
+      </div>
 
-          <span className="absolute bottom-12 right-7 h-1.5 w-1.5 rounded-full bg-blue shadow-[0_0_12px_rgba(59,130,246,0.9)]" />
+      {/* Center SHALOMHEGA logo */}
+      <div className="shalom-logo-glow relative z-20 flex items-center justify-center">
+        <div className="absolute h-[205px] w-[205px] rounded-full bg-cyan-400/10 blur-[45px] sm:h-[250px] sm:w-[250px]" />
+
+        <div className="relative flex h-[210px] w-[210px] items-center justify-center rounded-full border border-cyan-300/20 bg-[#070a18]/75 p-5 shadow-[0_0_80px_rgba(59,130,246,0.22)] backdrop-blur-sm sm:h-[260px] sm:w-[260px] sm:p-7">
+          <div className="absolute inset-3 rounded-full border border-purple-400/15" />
+
+          <div className="absolute inset-6 rounded-full border border-blue-400/10" />
+
+          <img
+            src="/images/NETWORKIMAGE.png"
+            alt="SHALOMHEGA NETWORKS"
+            className="relative z-10 max-h-[155px] max-w-[180px] object-contain drop-shadow-[0_0_28px_rgba(34,211,238,0.35)] sm:max-h-[195px] sm:max-w-[225px]"
+          />
         </div>
+      </div>
 
-        <div className="absolute left-2 top-1/4 hidden rounded-xl border border-purple/20 bg-surface/80 px-4 py-3 shadow-xl backdrop-blur-md sm:block">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-purple">
-            Community
-          </p>
-          <div className="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-purple to-blue" />
-        </div>
+      {/* Floating system labels */}
+      <div className="absolute left-[4%] top-[23%] rounded-full border border-cyan-400/15 bg-[#080b18]/70 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-cyan-200/70 backdrop-blur-md">
+        Connected
+      </div>
 
-        <div className="absolute bottom-1/4 right-0 hidden rounded-xl border border-cyan/20 bg-surface/80 px-4 py-3 shadow-xl backdrop-blur-md sm:block">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan">
-            Systems
-          </p>
-          <div className="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-blue to-cyan" />
-        </div>
+      <div className="absolute right-[3%] top-[31%] rounded-full border border-purple-400/15 bg-[#080b18]/70 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-purple-200/70 backdrop-blur-md">
+        Community
+      </div>
 
-        <div className="absolute right-4 top-10 hidden rounded-full border border-white/10 bg-background/70 px-3 py-2 text-xs text-ink-muted backdrop-blur-md sm:block">
-          Connected
-        </div>
+      <div className="absolute bottom-[19%] left-[13%] rounded-full border border-blue-400/15 bg-[#080b18]/70 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-blue-200/70 backdrop-blur-md">
+        Systems
+      </div>
 
-        <div className="absolute bottom-12 left-8 hidden rounded-full border border-white/10 bg-background/70 px-3 py-2 text-xs text-ink-muted backdrop-blur-md sm:block">
-          Built to grow
-        </div>
+      <div className="absolute bottom-[14%] right-[13%] rounded-full border border-cyan-400/15 bg-[#080b18]/70 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-cyan-200/70 backdrop-blur-md">
+        Built to grow
       </div>
     </div>
   );
@@ -118,7 +309,9 @@ function Home() {
       {/* Hero */}
       <section className="relative isolate overflow-hidden border-b border-white/[0.06]">
         <GlowOrb className="-left-40 top-16 h-[28rem] w-[28rem] bg-purple/20 blur-3xl" />
+
         <GlowOrb className="right-[-8rem] top-[-6rem] h-[30rem] w-[30rem] bg-blue/15 blur-3xl" />
+
         <GlowOrb className="left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 bg-cyan/5 blur-3xl" />
 
         <div
@@ -128,30 +321,21 @@ function Home() {
             backgroundImage:
               "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
             backgroundSize: "72px 72px",
-            maskImage:
-              "linear-gradient(to bottom, black, transparent 85%)",
+            maskImage: "linear-gradient(to bottom, black, transparent 85%)",
             WebkitMaskImage:
               "linear-gradient(to bottom, black, transparent 85%)",
           }}
         />
 
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-20"
-          style={{
-            background:
-              "radial-gradient(circle at 72% 42%, rgba(34,211,238,0.12), transparent 28%), radial-gradient(circle at 35% 30%, rgba(124,58,237,0.12), transparent 30%)",
-          }}
-        />
-
-        <Container className="relative py-20 sm:py-28 lg:py-32">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+        <Container className="relative py-24 sm:py-32 lg:py-36">
+          <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
             <div className="max-w-4xl">
               <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-cyan/20 bg-cyan/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan shadow-[0_0_30px_rgba(0,229,255,0.06)]">
                 <span
                   aria-hidden="true"
                   className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_10px_rgba(0,229,255,0.8)]"
                 />
+
                 {content.heroBadge}
               </div>
 
@@ -177,7 +361,7 @@ function Home() {
                 </Button>
               </div>
 
-              <div className="mt-12 grid max-w-3xl grid-cols-1 gap-5 sm:grid-cols-3">
+              <div className="mt-14 grid max-w-3xl grid-cols-1 gap-5 sm:grid-cols-3">
                 {content.highlights.map(([title, text]) => (
                   <div
                     key={title}
@@ -198,6 +382,7 @@ function Home() {
               </div>
             </div>
 
+            {/* Network visual */}
             <NetworkVisual />
           </div>
         </Container>
@@ -491,6 +676,7 @@ function Home() {
       {/* Final CTA */}
       <section className="relative overflow-hidden border-t border-white/[0.06] py-24 sm:py-32">
         <GlowOrb className="left-1/2 top-0 h-[30rem] w-[30rem] -translate-x-1/2 bg-purple/20 blur-3xl" />
+
         <GlowOrb className="left-1/4 bottom-0 h-64 w-64 bg-blue/10 blur-3xl" />
 
         <Container className="relative text-center">
