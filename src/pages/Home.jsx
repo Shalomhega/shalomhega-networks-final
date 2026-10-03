@@ -1,6 +1,13 @@
 import { useLanguage } from "../lib/LanguageContext.jsx";
 import { homeTranslations } from "../data/homeTranslations.js";
-import { Button, Card, Container, Section, SectionHeading, GlowOrb } from "../components/ui";
+import {
+  Button,
+  Card,
+  Container,
+  Section,
+  SectionHeading,
+  GlowOrb,
+} from "../components/ui";
 
 function Arrow() {
   return (
@@ -27,7 +34,7 @@ function Home() {
               {content.heroBadge}
             </div>
 
-            <h1 className="max-w-4xl font-heading text-5xl font-bold leading-[1.03] tracking-tight sm:text-6xl lg:text-8xl">
+            <h1 className="max-w-4xl font-heading text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-8xl">
               {content.heroTitle}
             </h1>
 
@@ -146,7 +153,7 @@ function Home() {
             title={content.processTitle}
           />
 
-          <div className="mt-12 grid gap-4 md:grid-cols-5">
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {content.processSteps.map((step, index) => (
               <div
                 key={step}
@@ -179,10 +186,7 @@ function Home() {
 
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {content.systems.map((system, index) => (
-              <Card
-                key={system}
-                className="min-h-[150px] p-6"
-              >
+              <Card key={system} className="min-h-[150px] p-6">
                 <span className="text-xs text-purple">
                   SYSTEM {String(index + 1).padStart(2, "0")}
                 </span>
