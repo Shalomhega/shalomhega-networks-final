@@ -3,13 +3,15 @@ import AnnouncementBar from "./AnnouncementBar.jsx";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 import CommunityPopup from "../ui/CommunityPopup.jsx";
-import GoogleAnalytics from "../analytics/GoogleAnalytics.jsx";
+import { trackWebsiteVisitor } from "../../lib/visitorTracking.js";
 
 function MainLayout() {
+  if (typeof window !== "undefined") {
+    trackWebsiteVisitor();
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-brand-field">
-      <GoogleAnalytics />
-
       <AnnouncementBar />
 
       <Header />
