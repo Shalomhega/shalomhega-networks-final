@@ -36,6 +36,15 @@ const approaches = [
   "I Am Not Sure Yet",
 ];
 
+const emailAddress = "shalomcostar@gmail.com";
+const discordUsername = "shalom_x2";
+
+const gmailUrl =
+  "https://mail.google.com/mail/?view=cm&fs=1&to=shalomcostar@gmail.com";
+
+const mailtoUrl =
+  "mailto:shalomcostar@gmail.com?subject=SHALOMHEGA%20NETWORKS%20Project%20Inquiry";
+
 function StartYourProject() {
   const [searchParams] = useSearchParams();
 
@@ -219,12 +228,131 @@ function StartYourProject() {
         </Container>
       </Section>
 
+      {/* Direct Contact */}
+      <Section className="pt-0">
+        <Container>
+          <div className="relative overflow-hidden rounded-3xl border border-cyan/15 bg-surface/70 p-6 shadow-2xl shadow-purple/5 md:p-8">
+            <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-purple/10 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-cyan/5 blur-3xl" />
+
+            <div className="relative">
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan">
+                  DIRECT CONTACT
+                </p>
+
+                <h2 className="mt-3 text-2xl font-bold sm:text-3xl">
+                  Prefer to speak with us directly?
+                </h2>
+
+                <p className="mt-3 leading-7 text-ink-muted">
+                  You can send your project details through the
+                  form below, or contact SHALOMHEGA NETWORKS
+                  directly by email or Discord.
+                </p>
+              </div>
+
+              <div className="mt-8 grid gap-4 md:grid-cols-3">
+                <a
+                  href={gmailUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group rounded-2xl border border-purple/20 bg-purple/5 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-purple/40 hover:bg-purple/10"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-purple">
+                      GMAIL
+                    </span>
+
+                    <span className="text-lg transition-transform duration-200 group-hover:translate-x-1">
+                      ↗
+                    </span>
+                  </div>
+
+                  <p className="mt-5 font-semibold text-ink">
+                    Open Gmail
+                  </p>
+
+                  <p className="mt-1 break-all text-sm text-ink-muted">
+                    {emailAddress}
+                  </p>
+                </a>
+
+                <a
+                  href={mailtoUrl}
+                  className="group rounded-2xl border border-cyan/20 bg-cyan/5 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-cyan/40 hover:bg-cyan/10"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-cyan">
+                      EMAIL
+                    </span>
+
+                    <span className="text-lg transition-transform duration-200 group-hover:translate-x-1">
+                      ↗
+                    </span>
+                  </div>
+
+                  <p className="mt-5 font-semibold text-ink">
+                    Email Us
+                  </p>
+
+                  <p className="mt-1 break-all text-sm text-ink-muted">
+                    {emailAddress}
+                  </p>
+                </a>
+
+                <a
+                  href="https://discord.com/users/shalom_x2"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group rounded-2xl border border-blue/20 bg-blue/5 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-blue/40 hover:bg-blue/10"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-blue">
+                      DISCORD
+                    </span>
+
+                    <span className="text-lg transition-transform duration-200 group-hover:translate-x-1">
+                      ↗
+                    </span>
+                  </div>
+
+                  <p className="mt-5 font-semibold text-ink">
+                    Message on Discord
+                  </p>
+
+                  <p className="mt-1 text-sm text-ink-muted">
+                    {discordUsername}
+                  </p>
+                </a>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Project Inquiry */}
       <Section>
         <Container>
           <form
             onSubmit={submit}
             className="grid gap-8 rounded-3xl border border-border bg-surface/80 p-6 shadow-2xl shadow-purple/5 md:p-10"
           >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan">
+                PROJECT INQUIRY
+              </p>
+
+              <h2 className="mt-2 text-2xl font-bold">
+                Tell us what you want to build
+              </h2>
+
+              <p className="mt-2 text-ink-muted">
+                Four simple steps are enough to give us the
+                direction we need.
+              </p>
+            </div>
+
             <div className="flex flex-wrap items-center gap-3">
               {[1, 2, 3, 4].map((number) => (
                 <div
@@ -530,32 +658,6 @@ function StartYourProject() {
               )}
             </div>
           </form>
-        </Container>
-      </Section>
-
-      <Section>
-        <Container>
-          <div className="grid gap-5 md:grid-cols-2">
-            <div className="rounded-2xl border border-border bg-surface p-6">
-              <p className="text-xs tracking-widest text-cyan">
-                EMAIL
-              </p>
-
-              <p className="mt-2 text-lg">
-                shalomcostar@gmail.com
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-surface p-6">
-              <p className="text-xs tracking-widest text-cyan">
-                DISCORD
-              </p>
-
-              <p className="mt-2 text-lg">
-                shalom_x2
-              </p>
-            </div>
-          </div>
         </Container>
       </Section>
     </main>
