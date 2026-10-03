@@ -29,6 +29,11 @@ export const translations = {
       submit: "Submit",
       send: "Send",
       loading: "Loading...",
+      popupEyebrow: "Ready to build?",
+      popupTitle: "Your community can be better structured.",
+      popupDescription:
+        "Tell us what you want your community to become and we will help you plan the right structure and systems.",
+      popupCta: "Start Your Project",
     },
 
     language: {
@@ -66,6 +71,11 @@ export const translations = {
       submit: "Enviar",
       send: "Enviar",
       loading: "Cargando...",
+      popupEyebrow: "¿Listo para construir?",
+      popupTitle: "Tu comunidad puede tener una mejor estructura.",
+      popupDescription:
+        "Cuéntanos en qué quieres convertir tu comunidad y te ayudaremos a planificar la estructura y los sistemas adecuados.",
+      popupCta: "Inicia Tu Proyecto",
     },
 
     language: {
@@ -103,6 +113,11 @@ export const translations = {
       submit: "Envoyer",
       send: "Envoyer",
       loading: "Chargement...",
+      popupEyebrow: "Prêt à construire ?",
+      popupTitle: "Votre communauté peut être mieux structurée.",
+      popupDescription:
+        "Dites-nous ce que vous souhaitez créer pour votre communauté et nous vous aiderons à définir la bonne structure et les bons systèmes.",
+      popupCta: "Démarrer Votre Projet",
     },
 
     language: {
@@ -140,6 +155,11 @@ export const translations = {
       submit: "Absenden",
       send: "Senden",
       loading: "Wird geladen...",
+      popupEyebrow: "Bereit zum Aufbau?",
+      popupTitle: "Deine Community kann besser strukturiert sein.",
+      popupDescription:
+        "Erzähle uns, was aus deiner Community werden soll, und wir helfen dir, die passende Struktur und die richtigen Systeme zu planen.",
+      popupCta: "Projekt Starten",
     },
 
     language: {
@@ -177,6 +197,11 @@ export const translations = {
       submit: "Enviar",
       send: "Enviar",
       loading: "Carregando...",
+      popupEyebrow: "Pronto para construir?",
+      popupTitle: "Sua comunidade pode ter uma estrutura melhor.",
+      popupDescription:
+        "Conte-nos o que você quer criar para sua comunidade e ajudaremos a planejar a estrutura e os sistemas certos.",
+      popupCta: "Inicie Seu Projeto",
     },
 
     language: {
@@ -214,6 +239,11 @@ export const translations = {
       submit: "Invia",
       send: "Invia",
       loading: "Caricamento...",
+      popupEyebrow: "Pronto a costruire?",
+      popupTitle: "La tua community può avere una struttura migliore.",
+      popupDescription:
+        "Raccontaci cosa vuoi creare per la tua community e ti aiuteremo a pianificare la struttura e i sistemi giusti.",
+      popupCta: "Inizia il Tuo Progetto",
     },
 
     language: {
@@ -251,6 +281,11 @@ export const translations = {
       submit: "إرسال",
       send: "إرسال",
       loading: "جار التحميل...",
+      popupEyebrow: "هل أنت مستعد للبناء؟",
+      popupTitle: "يمكن تنظيم مجتمعك بشكل أفضل.",
+      popupDescription:
+        "أخبرنا بما تريد أن يصبح عليه مجتمعك وسنساعدك في تخطيط الهيكل والأنظمة المناسبة.",
+      popupCta: "ابدأ مشروعك",
     },
 
     language: {
@@ -288,6 +323,11 @@ export const translations = {
       submit: "提交",
       send: "发送",
       loading: "加载中...",
+      popupEyebrow: "准备好开始了吗？",
+      popupTitle: "您的社区可以拥有更好的结构。",
+      popupDescription:
+        "告诉我们您希望社区发展成什么样，我们会帮助您规划合适的结构和系统。",
+      popupCta: "开始您的项目",
     },
 
     language: {
@@ -325,6 +365,11 @@ export const translations = {
       submit: "送信",
       send: "送る",
       loading: "読み込み中...",
+      popupEyebrow: "準備はできましたか？",
+      popupTitle: "あなたのコミュニティはもっと整えられます。",
+      popupDescription:
+        "コミュニティをどのようにしたいか教えてください。適切な構造とシステムを一緒に計画します。",
+      popupCta: "プロジェクトを始める",
     },
 
     language: {
@@ -362,6 +407,11 @@ export const translations = {
       submit: "제출",
       send: "보내기",
       loading: "로딩 중...",
+      popupEyebrow: "준비되셨나요?",
+      popupTitle: "커뮤니티를 더 체계적으로 만들 수 있습니다.",
+      popupDescription:
+        "커뮤니티를 어떤 모습으로 만들고 싶은지 알려주시면 적합한 구조와 시스템을 함께 계획해드립니다.",
+      popupCta: "프로젝트 시작",
     },
 
     language: {
