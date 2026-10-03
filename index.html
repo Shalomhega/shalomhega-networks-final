@@ -5,6 +5,7 @@
 
     <!-- Website Favicon -->
     <link rel="icon" type="image/png" href="/NETWORKIMAGE.png" />
+
     <link
       rel="icon"
       type="image/svg+xml"
@@ -13,10 +14,8 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Website Title -->
     <title>SHALOMHEGA NETWORKS</title>
 
-    <!-- Website Description -->
     <meta
       name="description"
       content="SHALOMHEGA NETWORKS builds, revamps, and improves Discord communities for streamers, creators, and businesses."
@@ -24,13 +23,12 @@
 
     <meta name="theme-color" content="#090912" />
 
-    <!-- Canonical URL -->
     <link
       rel="canonical"
       href="https://shalomeganetwork.netlify.app/"
     />
 
-    <!-- Open Graph Social Preview -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
 
     <meta
@@ -73,7 +71,7 @@
       content="SHALOMHEGA NETWORKS"
     />
 
-    <!-- Twitter / X Preview -->
+    <!-- Twitter -->
     <meta
       name="twitter:card"
       content="summary_large_image"
@@ -94,9 +92,34 @@
       content="https://shalomeganetwork.netlify.app/og-image.png"
     />
 
-    <!-- Fonts -->
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-QS6TRJLEBC"
+    ></script>
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      gtag("js", new Date());
+
+      gtag("config", "G-QS6TRJLEBC", {
+        send_page_view: false,
+      });
+    </script>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
 
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap"
@@ -107,6 +130,9 @@
   <body>
     <div id="root"></div>
 
-    <script type="module" src="/src/main.jsx"></script>
+    <script
+      type="module"
+      src="/src/main.jsx"
+    ></script>
   </body>
 </html>
