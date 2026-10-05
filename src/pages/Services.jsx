@@ -19,10 +19,12 @@ const Arrow = () => (
 
 function Services() {
   const { language } = useLanguage();
+
   const content =
     servicesTranslations[language] || servicesTranslations.en;
 
   const heroWords = content.heroTitle.split(" ");
+
   const highlightStart =
     heroWords.length > 4
       ? Math.max(heroWords.length - 5, 0)
@@ -85,11 +87,11 @@ function Services() {
           description={content.coreDescription}
         />
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
           {content.services.map((service) => (
             <Card
               key={service.number}
-              className="group relative flex min-h-[360px] flex-col overflow-hidden p-7 transition-all duration-300 hover:-translate-y-1 hover:border-purple/30 hover:shadow-[0_24px_70px_rgba(76,59,255,0.10)]"
+              className="group relative flex min-h-[390px] flex-col overflow-hidden p-6 transition-all duration-300 hover:-translate-y-1 hover:border-purple/30 hover:shadow-[0_24px_70px_rgba(76,59,255,0.10)]"
             >
               <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-purple/10 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
 
@@ -98,23 +100,29 @@ function Services() {
                   {service.number}
                 </span>
 
-                <span className="h-2 w-16 rounded-full bg-gradient-to-r from-purple to-cyan opacity-70 transition-all duration-300 group-hover:w-20" />
+                <span className="h-2 w-12 rounded-full bg-gradient-to-r from-purple to-cyan opacity-70 transition-all duration-300 group-hover:w-16" />
               </div>
 
               <div className="relative">
-                <h2 className="mt-10 text-2xl font-bold">
+                <h2 className="mt-8 text-xl font-bold leading-tight">
                   {service.title}
                 </h2>
 
-                <p className="mt-5 leading-7 text-ink-muted">
+                <p className="mt-4 text-sm leading-6 text-ink-muted">
                   {service.text}
                 </p>
               </div>
 
-              <ul className="relative mt-auto space-y-3 pt-8 text-sm text-ink-muted">
+              <ul className="relative mt-auto space-y-3 pt-7 text-sm text-ink-muted">
                 {service.points.map((point) => (
-                  <li key={point} className="flex gap-3">
-                    <span className="shrink-0 text-cyan">✦</span>
+                  <li
+                    key={point}
+                    className="flex gap-2.5"
+                  >
+                    <span className="shrink-0 text-cyan">
+                      ✦
+                    </span>
+
                     <span>{point}</span>
                   </li>
                 ))}
